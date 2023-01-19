@@ -1,0 +1,68 @@
+.passenger-page {
+  .passenger-page-title {
+    h1 {
+      font-size: 24pt;
+      font-weight: 600;
+      letter-spacing: -1px;
+    }
+  }
+}
+
+.date-picker {
+  position: relative;
+  span {
+    position: absolute;
+    height: 100%;
+    width: 100%;
+    border-radius: 4px;
+    z-index: 1;
+    cursor: pointer;
+  }
+}
+
+@mixin switch($res: 'sm') {
+  $index: 1rem;
+  $mainVal: 1rem;
+
+  @if $res == 'md' {
+      $index: 2rem;
+      $mainVal: 1.5rem;
+  } @else if $res == 'lg' {
+      $index: 3rem;
+      $mainVal: 2rem;
+  } @else if $res == 'xl' {
+      $index: 4rem;
+      $mainVal: 2.5rem;
+  }
+
+  margin-bottom: calc($index / 2);
+
+  .form-check-input {
+      height: $mainVal;
+      width: calc(#{$index} + 0.75rem);
+      border-radius: $mainVal * 2;
+  }
+}
+
+.form-check-input {
+clear: left;
+}
+
+// YOU CAN PUT ALL RESOLUTION HERE
+// sm - DEFAULT, md, lg, xl
+
+.form-switch.form-switch-sm {
+  @include switch();
+}
+
+.form-switch.form-switch-md {
+  @include switch('md');
+}
+
+.form-switch.form-switch-lg {
+  @include switch('lg');
+}
+
+.form-switch.form-switch-xl {
+  @include switch('xl');
+}

@@ -1,0 +1,9 @@
+{
+  "/pass-sakay-v1/api/*": {
+    "target": "http://localhost:4300",
+    "secure": false,
+    "pathRewrite": { "^/pass-sakay-v1/api": "" },
+    "changeOrigin": true,
+    "logLevel": "debug"
+  }
+}

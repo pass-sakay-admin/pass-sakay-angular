@@ -1,0 +1,131 @@
+<div class="passenger-page container">
+  <div class="row pt-4">
+    <div class="passenger-page-title col col-12">
+      <div class="d-flex flex-row justify-content-between align-items-center">
+        <h1 class="m-0 p-0">Generate Trip Report</h1>
+        <!-- <button class="m-0 p-0" mat-fab color="warn" (click)="save()" aria-label="Edit Profile">
+          <mat-icon>save_alt</mat-icon>
+        </button> -->
+      </div>
+    </div>
+  </div>
+  <div class="row pt-5">
+    <div
+      class="passenger-profile-form col col-12 col-sm-12 col-md-12 col-lg-6 col-xl-6 pb-5"
+      [formGroup]="generateReportForm"
+    >
+      <div class="row pb-3">
+        <div class="col col-12">
+          <!-- <div class="form-group">
+            <label>Bus Name</label>
+            <select name="busAccount" class="form-control form-select disabled" [disabled]="true" formControlName="busAccount">
+              <option selected *ngFor="let bus of busProfileData" [value]="bus.value">
+                {{ bus.text }}
+              </option>
+            </select> 
+            <small id="lastnameHelp" class="form-text text-muted">
+                We'll never share your email with anyone else.
+            </small>
+          </div> -->
+          <mat-form-field appearance="outline" class="d-block">
+            <mat-label>Bus Name</mat-label>
+            <mat-select formControlName="tripPlaceOfScan" placeholder="Select a Bus">
+              <mat-option
+                aria-selected="true"
+                selected
+                *ngFor="let bus of busProfileData" 
+                [value]="bus.value"
+                >{{ bus.text }}</mat-option
+              >
+            </mat-select>
+          </mat-form-field>
+        </div>
+        <div class="col col-12">
+          <mat-form-field appearance="outline" class="w-100">
+            <mat-label>Select Date Range</mat-label>
+            <mat-date-range-input [rangePicker]="picker">
+              <input matStartDate formControlName="dateFrom" (focus)="picker.open()" placeholder="Start (MM/DD/YYYY)">
+              <input matEndDate formControlName="dateTo" (focus)="picker.open()" placeholder="End (MM/DD/YYYY)">
+            </mat-date-range-input>
+            <mat-date-range-picker #picker></mat-date-range-picker>
+            <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+          </mat-form-field>
+        </div>
+        <!-- <div class="col col-12 col-sm-12 col-md-12 col-lg-6 col-xl-6 pb-3">
+          <div class="form-group">
+            <label>From</label>
+            <div class="date-picker">
+              <span (click)="datepickerFrom.toggle()" *ngIf="toggleDatePicker"></span>
+              <input
+                class="form-control"
+                type="text"
+                placeholder="-- Choose a date --"
+                name="dateFrom"
+                formControlName="dateFrom"
+                ngbDatepicker
+                #datepickerFrom="ngbDatepicker"
+                autocomplete="false"
+                (change)="setMinDate()"
+                [maxDate]="maxDate"
+              />
+            </div>
+          </div>
+        </div>
+        <div class="col col-12 col-sm-12 col-md-12 col-lg-6 col-xl-6 pb-3">
+          <div class="form-group">
+            <label>To</label>
+            <div class="date-picker">
+              <span (click)="datepickerTo.toggle()" *ngIf="toggleDatePicker"></span>
+              <input
+                class="form-control"
+                type="text"
+                placeholder="-- Choose a date --"
+                name="dateTo"
+                formControlName="dateTo"
+                ngbDatepicker
+                #datepickerTo="ngbDatepicker"
+                autocomplete="false"
+                (change)="setMaxDate()"
+                [minDate]="minDate"
+              />
+            </div>
+          </div>
+        </div> -->
+        <div class="col col-12 col-sm-12 col-md-12 col-lg-12 col-xl-12 pb-3">
+          <div class="form-group">
+            <div class="form-check form-switch">
+              <input class="form-check-input" (change)="onChangeJustToday()" type="checkbox" id="justTodayCheck" formControlName="today">
+              <label class="form-check-label" for="justTodayCheck">
+                Just today
+              </label>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="row pb-3">
+        <div class="col col-12">
+          <div
+            class="d-flex flex-row justify-content-end gap-3"
+          >
+            <button
+              class="order-2"
+              mat-flat-button
+              color="primary"
+              (click)="generateHeaderFooterTable()"
+            >
+              Generate
+            </button>
+            <button
+              class="order-1"
+              mat-stroked-button
+              color="primary"
+            >
+              Clear
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,16 @@
+footer {
+    width: auto;
+    padding: 8px;
+    background-color: #151515;
+}
+
+footer div.text-container {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    vertical-align: middle;
+    justify-content: space-between;
+    padding: 8px 36px 8px 36px;
+    color: #f8f8f8;
+    font-size: smaller;
+}

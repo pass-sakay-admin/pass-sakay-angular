@@ -1,0 +1,243 @@
+<div class="passenger-page container">
+  <div class="row pt-3">
+    <div class="passenger-page-title col col-12">
+      <div class="d-flex flex-row justify-content-between align-items-center">
+        <h1 class="m-0 p-0 admin-page-title">
+          Passengers 
+          <span class="text-muted">| Edit Passenger Info</span>
+        </h1>
+        <button
+          class="m-0 p-0"
+          mat-fab
+          color="warn"
+          aria-label="Edit Profile"
+          (click)="onCancelAddEdit()"
+        >
+          <mat-icon>close</mat-icon>
+        </button>
+      </div>
+    </div>
+  </div>
+  <div class="row pt-5">
+    <div
+      class="passenger-profile-form col col-12 col-sm-12 col-md-12 col-lg-8 col-xl-8 pb-5"
+      [formGroup]="passengerDataFormGroup"
+    >
+      <div class="row pb-3">
+        <div class="col col-12">
+          <div class="form-group-name">PASSENGER STATUS</div>
+        </div>
+        <div class="col col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4 pb-3">
+          <div class="form-group">
+            <label>Status</label>
+            <div class="custom-radio d-flex flex-row gap-3 align-items-center">
+              <div class="form-check form-check-inline">
+                <input
+                  class="form-check-input"
+                  formControlName="status"
+                  type="radio"
+                  name="status"
+                  id="active"
+                  value="Active"
+                />
+                <label class="form-check-label" for="active">Active</label>
+              </div>
+              <div class="form-check form-check-inline">
+                <input
+                  class="form-check-input"
+                  formControlName="status"
+                  type="radio"
+                  name="status"
+                  id="inactive"
+                  value="Inactive"
+                />
+                <label class="form-check-label" for="inactive">Inactive</label>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="row pb-3">
+        <div class="col col-12">
+          <div class="form-group-name">BASIC INFORMATION</div>
+        </div>
+        <div class="col col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4 pb-3">
+          <div class="form-group">
+            <label>Lastname</label>
+            <input
+              type="text"
+              formControlName="lastname"
+              class="form-control"
+              aria-describedby="lastnameHelp"
+              placeholder="Enter lastname"
+            />
+            <!-- <small id="lastnameHelp" class="form-text text-muted">
+                We'll never share your email with anyone else.
+            </small> -->
+          </div>
+        </div>
+        <div class="col col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4 pb-3">
+          <div class="form-group">
+            <label>Firstname</label>
+            <input
+              type="text"
+              class="form-control"
+              formControlName="firstname"
+              aria-describedby="firstnameHelp"
+              placeholder="Enter firstname"
+            />
+          </div>
+        </div>
+        <div class="col col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4 pb-3">
+          <div class="form-group">
+            <label>Middlename</label>
+            <input
+              type="text"
+              class="form-control"
+              formControlName="middlename"
+              aria-describedby="middlenameHelp"
+              placeholder="Enter middlename"
+            />
+          </div>
+        </div>
+        <div class="col col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4 pb-3">
+          <div class="form-group">
+            <label>Birthdate</label>
+            <div class="date-picker">
+              <span (click)="datepicker.toggle()" *ngIf="!editMode"></span>
+              <input
+                class="form-control"
+                type="text"
+                placeholder="-- Choose a date --"
+                name="birthdate"
+                formControlName="birthdate"
+                ngbDatepicker
+                #datepicker="ngbDatepicker"
+                autocomplete="false"
+              />
+            </div>
+          </div>
+        </div>
+        <div class="col col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4 pb-3">
+          <div class="form-group">
+            <label>Gender</label>
+            <div class="custom-radio d-flex flex-row gap-3 align-items-center">
+              <div class="form-check form-check-inline">
+                <input
+                  class="form-check-input"
+                  formControlName="gender"
+                  type="radio"
+                  name="gender"
+                  id="male"
+                  value="Male"
+                />
+                <label class="form-check-label" for="male">Male</label>
+              </div>
+              <div class="form-check form-check-inline">
+                <input
+                  class="form-check-input"
+                  formControlName="gender"
+                  type="radio"
+                  name="gender"
+                  id="female"
+                  value="Female"
+                />
+                <label class="form-check-label" for="female">Female</label>
+              </div>
+            </div>
+            <!-- <input
+                type="text"
+                class="form-control pointer"
+                formControlName="gender"
+                placeholder="-- Choose a gender --"
+                [ngbTypeahead]="autoCompleteGender"
+                (focus)="focus$.next($any($event).target.value)"
+                (click)="click$.next($any($event).target.value)"
+                #typeAheadInstance="ngbTypeahead"
+            /> -->
+          </div>
+        </div>
+      </div>
+
+      <div class="row pb-3">
+        <div class="col col-12">
+          <div class="form-group-name">CONTACTS AND ADDRESSES</div>
+        </div>
+        <div class="col col-12 col-sm-12 col-md-6 col-lg-6 col-xl-6 pb-3">
+          <div class="form-group">
+            <label>Active Phone Number</label>
+            <input
+              type="text"
+              formControlName="phoneNumber"
+              class="form-control"
+              aria-describedby="phoneNumberHelp"
+              placeholder="Enter Phone Number"
+            />
+            <!-- <small id="phoneNumberHelp" class="form-text text-muted">
+                We'll never share your email with anyone else.
+            </small> -->
+          </div>
+        </div>
+        <div class="col col-12 col-sm-12 col-md-6 col-lg-6 col-xl-6 pb-3">
+          <div class="form-group">
+            <label>Active Email Address</label>
+            <input
+              type="text"
+              class="form-control"
+              formControlName="emailAddress"
+              aria-describedby="emailAddressHelp"
+              placeholder="Enter Email Address"
+            />
+          </div>
+        </div>
+        <div class="col col-12 col-sm-12 col-md-12 col-lg-12 col-xl-12 pb-3">
+          <div class="form-group">
+            <label>Current Address</label>
+            <input
+              type="text"
+              formControlName="currentAddress"
+              class="form-control"
+              aria-describedby="currentAddressHelp"
+              placeholder="Enter Current Address"
+            />
+          </div>
+        </div>
+        <div class="col col-12 col-sm-12 col-md-12 col-lg-12 col-xl-12 pb-3">
+          <div class="form-group">
+            <label>Home Address</label>
+            <input
+              type="text"
+              class="form-control"
+              formControlName="homeAddress"
+              aria-describedby="homeAddressHelp"
+              placeholder="Enter Home Address"
+            />
+          </div>
+        </div>
+      </div>
+
+      <div class="row pb-3">
+        <div class="col col-12">
+          <div class="d-flex flex-row justify-content-end gap-3">
+            <button
+              class="order-2"
+              mat-flat-button
+              color="primary"
+              (click)="onSavePassengerData()"
+            >
+              Save
+            </button>
+            <button
+              class="order-1"
+              mat-stroked-button
+              color="primary"
+              (click)="onCancelAddEdit()"
+            >
+              Cancel
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

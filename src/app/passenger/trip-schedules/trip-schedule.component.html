@@ -1,0 +1,54 @@
+<div class="passenger-page container">
+  <div class="row pt-5">
+    <div class="passenger-page-title col col-12">
+      <div class="d-flex flex-row justify-content-between align-items-center">
+        <h1 class="m-0 p-0">Trip Schedules</h1>
+        <button class="m-0 p-0" mat-fab color="warn" aria-label="Edit Profile">
+          <mat-icon>save_alt</mat-icon>
+        </button>
+      </div>
+    </div>
+  </div>
+  <div class="row py-5">
+    <!-- table -->
+    <div class="table-responsive table-responsive-sm">
+      <table class="table table-hover">
+        <thead>
+          <tr>
+            <th scope="col">#</th>
+            <th scope="col">Schedule Name</th>
+            <th scope="col">Bus Name</th>
+            <th scope="col">Days</th>
+            <th scope="col">Time</th>
+            <th scope="col">Route</th>
+            <th scope="col">Status</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngIf="tripScheduleList.length === 0">
+            <td colspan="7" class="text-center text-muted bg-light py-4">
+              No data yet. Try adding some.
+            </td>
+          </tr>
+          <tr
+            class="pointer"
+            *ngFor="let tripSched of tripScheduleList"
+            (click)="onSelectRow(tripSched)"
+          >
+            <td>
+              <strong>{{ tripSched.rowId }}</strong>
+            </td>
+            <td>{{ tripSched.ScheduleName }}</td>
+            <td>{{ tripSched.BusName }}</td>
+            <td>{{ tripSched.Days }}</td>
+            <td>{{ tripSched.Time }}</td>
+            <td>{{ tripSched.Route }}</td>
+            <td>
+              {{ tripSched.Status ? "Active" : "Inactive" }}
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>

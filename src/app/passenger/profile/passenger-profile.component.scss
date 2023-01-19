@@ -1,0 +1,89 @@
+$theme-colors: (
+  "primary": #287cb1,
+  "secondary": #428a82,
+);
+
+@mixin placeholder {
+  @each $placeholder in "::-webkit-input-placeholder", ":-moz-placeholder",
+    "::-moz-placeholder", ":-ms-input-placeholder"
+  {
+    &#{$placeholder} {
+      @content;
+    }
+  }
+}
+
+.passenger-qr {
+  padding: 16px;
+  margin: 4px;
+  border-radius: 8px;
+}
+
+.passenger-page {
+  .passenger-page-title {
+    h1 {
+      font-size: 24pt;
+      font-weight: 600;
+      letter-spacing: -1px;
+    }
+  }
+
+  .passenger-profile-form {
+    letter-spacing: -0.05rem !important;
+    .form-group-name {
+      font-weight: 400;
+      letter-spacing: 2px;
+      color: #287cb1;
+    }
+
+    .custom-radio {
+        .form-check {
+            padding-top: 6px;
+        }
+    }
+
+    button.calendar,
+    button.calendar:active {
+      width: 2.75rem;
+      background-image: url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACIAAAAcCAYAAAAEN20fAAAABHNCSVQICAgIfAhkiAAAAAlwSFlzAAAOxAAADsQBlSsOGwAAABl0RVh0U29mdHdhcmUAd3d3Lmlua3NjYXBlLm9yZ5vuPBoAAAEUSURBVEiJ7ZQxToVAEIY/YCHGxN6XGOIpnpaEsBSeQC9ArZbm9TZ6ADyBNzAhQGGl8Riv4BLAWAgmkpBYkH1b8FWT2WK/zJ8ZJ4qiI6XUI3ANnGKWBnht2/ZBDRK3hgVGNsCd7/ui+JkEIrKtqurLpEWaphd933+IyI3LEIdpCYCiKD6HcuOa/nwOa0ScJEnk0BJg0UTUWJRl6RxCYEzEmomsIlPU3IPW+grIAbquy+q6fluy/28RIBeRMwDXdXMgXLj/B2uimRXpui4D9sBeRLKl+1N+L+t6RwbWrZliTTTr1oxYtzVWiTQAcRxvTX+eJMnlUDaO1vpZRO5NS0x48sIwfPc87xg4B04MCzQi8hIEwe4bl1DnFMCN2zsAAAAASUVORK5CYII=") !important;
+      background-repeat: no-repeat;
+      background-size: 23px;
+      background-position: center;
+    }
+
+    input, select {
+      font-size: 11pt;
+      @include placeholder {
+        letter-spacing: -0.05rem !important;
+        font-size: 11pt;
+      }
+    }
+  }
+}
+
+.date-picker {
+  position: relative;
+  span {
+    position: absolute;
+    height: 100%;
+    width: 100%;
+    border-radius: 4px;
+    z-index: 1;
+    cursor: pointer;
+  }
+}
+
+.form-input {
+  width: 100%;
+  mat-label {
+    span {
+      color: #dc3545;
+    }
+  }
+}
+
+button {
+  &.btn-primary {
+    background-color: #287cb1;
+  }
+}

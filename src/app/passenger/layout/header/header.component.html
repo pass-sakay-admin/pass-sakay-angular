@@ -1,0 +1,72 @@
+<nav class="navbar navbar-expand-lg sticky-top navbar-light bg-white shadow">
+  <div class="container-fluid">
+    <div class="navbar-brand">
+      <p class="app-text-logo">
+        <span class="pass">PASS</span>
+        <span class="sakay">SAKAY</span>
+        <span class="passenger">Passenger</span>
+      </p>
+    </div>
+    <!-- <a class="navbar-brand" href="#">Start Bootstrap</a> -->
+    <button
+      class="navbar-toggler"
+      type="button"
+      data-bs-toggle="collapse"
+      data-bs-target="#passengerHeaderLinks"
+      aria-controls="passengerHeaderLinks"
+      aria-expanded="false"
+      aria-label="Toggle navigation"
+    >
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="passengerHeaderLinks">
+      <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
+        <li class="nav-item">
+          <a class="nav-link" [routerLink]="['/passenger/profile']" routerLinkActive="active">
+            Profile
+          </a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" [routerLink]="['/passenger/trip-schedule']" routerLinkActive="active">
+            Trip Schedule
+          </a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" [routerLink]="['/passenger/trip-history']" routerLinkActive="active">
+            Trip History
+          </a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" [routerLink]="['/passenger/account-settings']" routerLinkActive="active">
+            Account Settings
+          </a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" [routerLink]="['/passenger/logout']" routerLinkActive="active">
+            Logout
+          </a>
+        </li>
+        <!-- <li class="nav-item dropdown">
+            <a
+              class="nav-link dropdown-toggle"
+              id="navbarDropdown"
+              href="#"
+              role="button"
+              data-bs-toggle="dropdown"
+              aria-expanded="false"
+              >Dropdown</a
+            >
+            <ul
+              class="dropdown-menu dropdown-menu-end"
+              aria-labelledby="navbarDropdown"
+            >
+              <li><a class="dropdown-item" href="#">Action</a></li>
+              <li><a class="dropdown-item" href="#">Another action</a></li>
+              <li><hr class="dropdown-divider" /></li>
+              <li><a class="dropdown-item" href="#">Something else here</a></li>
+            </ul>
+          </li> -->
+      </ul>
+    </div>
+  </div>
+</nav>

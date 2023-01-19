@@ -1,0 +1,55 @@
+.wrapper{
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    flex-wrap: wrap;
+    height: 100%;
+    width: 100%;
+  
+    .form-wrapper {
+      width: 50%;
+      display: flex; 
+      flex-direction: column;
+      align-items: center;
+  
+      .justify-content-center {
+        text-align: center;
+      }
+  
+      .app-logo-container {
+        width: 100%;
+      }
+  
+      .app-router-outlet {
+        width: 100%;
+      }
+  
+      .app-text-logo {
+        font-family: 'Roboto', sans-serif !important;
+        font-weight: 900;
+        font-size: 18pt;
+        margin-bottom: 8px;
+        padding: 0 100px 0 100px;
+  
+        // span {  }
+        .pass { color: #287CB1; padding-right: 10px; }
+        .sakay { color: #428A82; }
+      }
+    }
+  
+    .image-container {
+      width: 50%;
+      height: 100%;
+      background-image: url('../../assets/images/common-bg.jpg');
+      background-repeat: no-repeat;
+      background-position: center;
+      background-size: cover;
+    }
+  
+    
+  }
+  
+  .hidden {
+    display: none;
+  }

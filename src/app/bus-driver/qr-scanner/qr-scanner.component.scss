@@ -1,0 +1,41 @@
+:host zxing-scanner::ng-deep video {
+  max-height: 60vh;
+  object-fit: contain;
+}
+:host zxing-scanner::ng-deep {
+  //   border-style: solid;
+  //   border-color: #5d78ff;
+}
+
+.form-group-name {
+  font-weight: 400;
+  letter-spacing: 2px;
+  color: #287cb1;
+}
+
+.custom-radio {
+  .form-check {
+    padding-top: 6px;
+  }
+}
+
+input,
+select {
+  font-size: 11pt;
+  &::placeholder {
+    letter-spacing: -0.05rem !important;
+    font-size: 11pt;
+  }
+}
+
+.date-picker {
+  position: relative;
+  span {
+    position: absolute;
+    height: 100%;
+    width: 100%;
+    border-radius: 4px;
+    z-index: 1;
+    cursor: pointer;
+  }
+}

@@ -1,0 +1,287 @@
+<div class="passenger-page container">
+  <div class="row pt-5">
+    <div class="passenger-page-title col col-12">
+      <div class="d-flex flex-row justify-content-between align-items-center">
+        <h1 class="m-0 p-0">Account Settings</h1>
+        <button class="m-0 p-0" mat-fab color="warn" aria-label="Edit Profile">
+          <mat-icon>save_alt</mat-icon>
+        </button>
+      </div>
+    </div>
+  </div>
+  <div class="row pt-5">
+    <div class="colcol-12 col-sm-12 col-md-12 col-lg-3 col-xl-7 pb-3">
+      <div class="d-flex">
+        <ul
+          ngbNav
+          #nav="ngbNav"
+          [(activeId)]="active"
+          class="passenger-pills nav-pills"
+          orientation="vertical"
+        >
+          <li ngbNavItem="usernameTabControl">
+            <a ngbNavLink>Username</a>
+            <ng-template ngbNavContent>
+              <div class="row pb-3" [formGroup]="changeUsernameFormGroup">
+                <div class="col col-12">
+                  <div class="form-group-name mb-2">CHANGE USERNAME</div>
+                </div>
+                <div
+                  class="col col-12 col-sm-12 col-md-6 col-lg-12 col-xl-12 pb-3"
+                >
+                  <div class="form-group">
+                    <label>Current Username</label>
+                    <input
+                      type="text"
+                      formControlName="currentUsername"
+                      class="form-control"
+                      aria-describedby="currentUsernameHelp"
+                      placeholder="Enter current Username"
+                    />
+                    <!-- <small id="phoneNumberHelp" class="form-text text-muted">
+                        We'll never share your email with anyone else.
+                    </small> -->
+                  </div>
+                </div>
+                <div
+                  class="col col-12 col-sm-12 col-md-6 col-lg-12 col-xl-12 pb-3"
+                >
+                  <div class="form-group">
+                    <label>New Username</label>
+                    <input
+                      type="text"
+                      formControlName="newUsername"
+                      class="form-control"
+                      aria-describedby="newUsernameHelp"
+                      placeholder="Enter new username"
+                    />
+                  </div>
+                </div>
+                <div
+                  class="col col-12 col-sm-12 col-md-12 col-lg-12 col-xl-12 pb-3"
+                >
+                  <div class="form-group">
+                    <label>Confirm New Username</label>
+                    <input
+                      type="text"
+                      class="form-control"
+                      formControlName="confirmNewUsername"
+                      aria-describedby="confirmNewUsernameHelp"
+                      placeholder="Confirm new username"
+                    />
+                  </div>
+                </div>
+              </div>
+              <div class="row pb-3">
+                <div class="col col-12">
+                  <div class="d-flex flex-row justify-content-end gap-3">
+                    <button
+                      class="order-2"
+                      mat-flat-button
+                      color="primary"
+                      (click)="onSubmitChangeUsername()"
+                    >
+                      Save
+                    </button>
+                    <button class="order-1" mat-stroked-button color="primary">
+                      Cancel
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </ng-template>
+          </li>
+          <li ngbNavItem="emailAddressTabControl">
+            <a ngbNavLink>Email Address</a>
+            <ng-template ngbNavContent>
+              <div class="row pb-3" [formGroup]="changeEmailFormGroup">
+                <div class="col col-12">
+                  <div class="form-group-name mb-2">CHANGE EMAIL ADDRESS</div>
+                </div>
+                <div
+                  class="col col-12 col-sm-12 col-md-6 col-lg-12 col-xl-12 pb-3"
+                >
+                  <div class="form-group">
+                    <label>Current Email Address</label>
+                    <input
+                      type="text"
+                      formControlName="currentEmail"
+                      class="form-control"
+                      aria-describedby="currentEmailHelp"
+                      placeholder="Enter current email"
+                    />
+                    <!-- <small id="phoneNumberHelp" class="form-text text-muted">
+                        We'll never share your email with anyone else.
+                    </small> -->
+                  </div>
+                </div>
+                <div
+                  class="col col-12 col-sm-12 col-md-6 col-lg-12 col-xl-12 pb-3"
+                >
+                  <div class="form-group">
+                    <label>New Email Address</label>
+                    <input
+                      type="text"
+                      formControlName="newEmail"
+                      class="form-control"
+                      aria-describedby="newEmailHelp"
+                      placeholder="Enter new email"
+                    />
+                  </div>
+                </div>
+                <div
+                  class="col col-12 col-sm-12 col-md-12 col-lg-12 col-xl-12 pb-3"
+                >
+                  <div class="form-group">
+                    <label>Confirm New Email</label>
+                    <input
+                      type="text"
+                      class="form-control"
+                      formControlName="confirmNewEmail"
+                      aria-describedby="confirmNewEmailHelp"
+                      placeholder="Confirm new email"
+                    />
+                  </div>
+                </div>
+              </div>
+              <div class="row pb-3">
+                <div class="col col-12">
+                  <div class="d-flex flex-row justify-content-end gap-3">
+                    <button
+                      class="order-2"
+                      mat-flat-button
+                      color="primary"
+                      (click)="onSubmitChangeEmail()"
+                    >
+                      Save
+                    </button>
+                    <button class="order-1" mat-stroked-button color="primary">
+                      Cancel
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </ng-template>
+          </li>
+          <li ngbNavItem="passwordTabControl">
+            <a ngbNavLink>Password</a>
+            <ng-template ngbNavContent>
+              <div class="row pb-3" [formGroup]="changePasswordFormGroup">
+                <div class="col col-12">
+                  <div class="form-group-name mb-2">CHANGE PASSWORD</div>
+                </div>
+                <div
+                  class="col col-12 col-sm-12 col-md-6 col-lg-12 col-xl-12 pb-3"
+                >
+                  <div class="form-group">
+                    <label>Current Password</label>
+                    <input
+                      type="text"
+                      formControlName="currentPassword"
+                      class="form-control"
+                      aria-describedby="currentPasswordHelp"
+                      placeholder="Enter current password"
+                    />
+                    <!-- <small id="phoneNumberHelp" class="form-text text-muted">
+                        We'll never share your email with anyone else.
+                    </small> -->
+                  </div>
+                </div>
+                <div
+                  class="col col-12 col-sm-12 col-md-6 col-lg-12 col-xl-12 pb-3"
+                >
+                  <div class="form-group">
+                    <label>New Password</label>
+                    <input
+                      type="text"
+                      formControlName="newPassword"
+                      class="form-control"
+                      aria-describedby="newPasswordHelp"
+                      placeholder="Enter new password"
+                    />
+                  </div>
+                </div>
+                <div
+                  class="col col-12 col-sm-12 col-md-12 col-lg-12 col-xl-12 pb-3"
+                >
+                  <div class="form-group">
+                    <label>Confirm New Password</label>
+                    <input
+                      type="text"
+                      class="form-control"
+                      formControlName="confirmNewPassword"
+                      aria-describedby="confirmNewPasswordHelp"
+                      placeholder="Confirm new password"
+                    />
+                  </div>
+                </div>
+              </div>
+              <div class="row pb-3">
+                <div class="col col-12">
+                  <div class="d-flex flex-row justify-content-end gap-3">
+                    <button
+                      class="order-2"
+                      mat-flat-button
+                      color="primary"
+                      (click)="onSubmitChangePassword()"
+                    >
+                      Save
+                    </button>
+                    <button class="order-1" mat-stroked-button color="primary">
+                      Cancel
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </ng-template>
+          </li>
+        </ul>
+        <div [ngbNavOutlet]="nav" class="ms-4"></div>
+      </div>
+    </div>
+    <div class="col col-12 col-sm-12 col-md-12 col-lg-1 col-xl-1"></div>
+    <div class="col col-12 col-sm-12 col-md-12 col-lg-4 col-xl-4 pb-3">
+      <div class="activity-log-container">
+        <div class="col col-12">
+          <div class="form-group-name mb-2">ACTIVITY LOGS</div>
+        </div>
+        <div class="col col-12">
+          <div class="table-responsive table-responsive-sm">
+            <table class="activty-logs-table table table-hover table-sm">
+              <caption>
+                Showing latest 10 activty logs
+              </caption>
+              <tbody>
+                <tr>
+                  <td>11/12/2022</td>
+                  <td>10:47 AM</td>
+                  <td>Logged in</td>
+                </tr>
+                <tr>
+                  <td>11/12/2022</td>
+                  <td>10:33 AM</td>
+                  <td>Updated password</td>
+                </tr>
+                <tr>
+                  <td>11/12/2022</td>
+                  <td>10:30 AM</td>
+                  <td>Logged in</td>
+                </tr>
+                <tr>
+                  <td>11/12/2022</td>
+                  <td>0813 PM</td>
+                  <td>Exported QR Code</td>
+                </tr>
+                <tr>
+                  <td>11/0/2022</td>
+                  <td>08:12 PM</td>
+                  <td>Joined</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

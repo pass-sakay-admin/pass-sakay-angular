@@ -1,0 +1,52 @@
+.app-logo-container {
+  width: 100%;
+
+  .app-text-logo {
+    font-family: 'Roboto', sans-serif !important;
+    font-weight: 900;
+    font-size: 18pt;
+    margin-bottom: 8px;
+    padding: 0 100px 0 100px;
+
+    // span {  }
+    .pass { color: #287CB1; padding-right: 10px; }
+    .sakay { color: #428A82; }
+  }
+}
+
+.form-header {
+  margin-bottom: 20px;
+  padding: 0 100px 0 100px;
+  h4 {
+    font-weight: 600;
+    padding: 0;
+    margin: 0;
+  }
+}
+
+.form-body {
+  width: auto;
+  height: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  padding: 0 100px 0 100px;
+
+  .form-input,
+  button {
+    width: 100%;
+  }
+}
+
+.form-footer {
+    margin-top: 24px;
+}
+
+mat-card {
+  background-color: #f44336;
+  color: white
+}
+
+.error-text {
+  color: #f44336;
+}

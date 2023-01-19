@@ -1,0 +1,188 @@
+// Custom Theming for Angular Material
+// For more information: https://material.angular.io/guide/theming
+@use "@angular/material" as mat;
+// Plus imports for other components in your app.
+
+// Include the common styles for Angular Material. We include this here so that you only
+// have to load a single css file for Angular Material in your app.
+// Be sure that you only ever include this mixin once!
+@include mat.core();
+
+// Define the palettes for your theme using the Material Design palettes available in palette.scss
+// (imported above). For each palette, you can optionally specify a default, lighter, and darker
+// hue. Available color palettes: https://material.io/design/color/
+$pass-sakay-angular-primary: mat.define-palette(mat.$indigo-palette);
+$pass-sakay-angular-accent: mat.define-palette(
+  mat.$pink-palette,
+  A200,
+  A100,
+  A400
+);
+
+// The warn palette is optional (defaults to red).
+$pass-sakay-angular-warn: mat.define-palette(mat.$red-palette);
+
+// Create the theme object. A theme consists of configurations for individual
+// theming systems such as "color" or "typography".
+$pass-sakay-angular-theme: mat.define-light-theme(
+  (
+    color: (
+      primary: $pass-sakay-angular-primary,
+      accent: $pass-sakay-angular-accent,
+      warn: $pass-sakay-angular-warn,
+    ),
+  )
+);
+
+// Include theme styles for core and each component used in your app.
+// Alternatively, you can import and @include the theme mixins for each component
+// that you are using.
+@include mat.all-component-themes($pass-sakay-angular-theme);
+// @import url("https://fonts.googleapis.com/icon?family=Material+Icons");
+
+/* You can add global styles to this file, and also import other style files */
+// @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@200;300;400;600;700;800;900&display=swap');
+
+* {
+  font-family: "Poppins", sans-serif !important;
+}
+
+.material-icons {
+  font-family: "Material Icons" !important;
+}
+
+html,
+body {
+  width: 100%;
+  height: 100%;
+}
+body {
+  margin: 0;
+}
+
+.app-logo-container {
+  width: 100%;
+
+  .app-text-logo {
+    font-family: "Roboto", sans-serif !important;
+    font-weight: 900;
+    font-size: 18pt;
+    margin-bottom: 8px;
+    padding: 0 100px 0 100px;
+
+    .pass {
+      color: #287cb1;
+      padding-right: 10px;
+    }
+    .sakay {
+      color: #428a82;
+    }
+  }
+}
+
+.w-100 {
+  width: 100%;
+}
+.w-75 {
+  width: 75%;
+}
+.w-50 {
+  width: 50%;
+}
+.w-25 {
+  width: 25%;
+}
+
+.h-100 {
+  height: 100%;
+}
+.h-75 {
+  height: 75%;
+}
+.h-50 {
+  height: 50%;
+}
+.h-25 {
+  height: 25%;
+}
+
+.p-0 {
+  padding: 0 !important;
+}
+.p-1 {
+  padding: 4px;
+}
+.p-2 {
+  padding: 8px;
+}
+.p-3 {
+  padding: 16px;
+}
+.p-4 {
+  padding: 24px;
+}
+.p-5 {
+  padding: 32px;
+}
+
+.m-0 {
+  margin: 0 !important;
+}
+.m-1 {
+  margin: 4px;
+}
+.m-2 {
+  margin: 8px;
+}
+.m-3 {
+  margin: 16px;
+}
+.m-4 {
+  margin: 24px;
+}
+.m-5 {
+  margin: 32px;
+}
+
+.flex {
+  display: flex;
+
+  &.flex-col {
+    flex-direction: column;
+  }
+
+  &.flex-row {
+    flex-direction: row;
+  }
+
+  &.g-1 {
+    gap: 4px;
+  }
+  &.g-2 {
+    gap: 8px;
+  }
+  &.g-3 {
+    gap: 16px;
+  }
+  &.g-4 {
+    gap: 24px;
+  }
+  &.g-5 {
+    gap: 32px;
+  }
+
+  &.space-between {
+    justify-content: space-between;
+  }
+
+  &.h-align-center {
+    align-items: center;
+  }
+  &.h-align-top {
+    // align-items: ;
+  }
+}
+
+.pointer {
+  cursor: pointer !important;
+}

@@ -1,0 +1,31 @@
+<div class="app-logo-container">
+  <p class="app-text-logo">
+    <span class="pass">PASS</span>
+    <span class="sakay">SAKAY</span>
+  </p>
+</div>
+<div class="form-header">
+  <h4>Login your Account</h4>
+  <!-- <p class="form-info">Select your Account Category:</p> -->
+</div>
+<div class="form-body">
+  <!-- <mat-card>
+    Incorrect email/username or password. Please try again.
+  </mat-card> -->
+  <div [formGroup]="loginFormGroup">
+    <mat-form-field appearance="outline" class="form-input">
+      <mat-label>Email address or username</mat-label>
+      <input matInput formControlName="emailUsername" type="text" value="" />
+    </mat-form-field>
+    <mat-form-field appearance="outline" class="form-input">
+      <mat-label>Password</mat-label>
+      <input matInput formControlName="password" type="password" value="" />
+    </mat-form-field>
+    <button [disabled]="disableLoginBtn" mat-flat-button color="primary" (click)="onLogin()">
+      Login
+    </button>
+  </div>
+  <div class="form-footer">
+    <p>Don't have any account yet? <a href="welcome/register">Register Now.</a></p>
+  </div>
+</div>

@@ -1,0 +1,115 @@
+<div class="passenger-page container">
+  <div class="row pt-4">
+    <div class="passenger-page-title col col-12">
+      <div class="d-flex flex-row justify-content-between align-items-center">
+        <h1 class="m-0 p-0">Contact Tracing</h1>
+        <!-- <button class="m-0 p-0" mat-fab color="warn" (click)="save()" aria-label="Edit Profile">
+          <mat-icon>save_alt</mat-icon>
+        </button> -->
+      </div>
+    </div>
+  </div>
+  <div class="row pt-5">
+    <div
+      class="passenger-profile-form col col-12 col-sm-12 col-md-12 col-lg-6 col-xl-6 pb-5"
+      [formGroup]="contactTracingForm"
+    >
+      <div class="row pb-3">
+        <div class="col col-12">
+          <p>*Note: Please be careful with tagging someone as Covid Positive as it may cause an issue.</p>
+        </div>
+        <div class="col col-12">
+          <mat-form-field appearance="outline" class="d-block">
+            <mat-label>Passenger</mat-label>
+            <mat-select
+              formControlName="passengerAccount"
+              placeholder="Select a Passenger"
+            >
+              <mat-option
+                aria-selected="true"
+                selected
+                *ngFor="let passenger of passengerList"
+                [value]="passenger.value"
+                >{{ passenger.text }}</mat-option
+              >
+            </mat-select>
+          </mat-form-field>
+        </div>
+        <div class="col col-12">
+          <mat-form-field appearance="outline" class="d-block">
+            <mat-label>Status</mat-label>
+            <mat-select
+              formControlName="status"
+              placeholder="Select a status"
+            >
+              <mat-option
+                aria-selected="true"
+                selected
+                *ngFor="let status of statusList"
+                [value]="status.value"
+                >{{ status.text }}</mat-option
+              >
+            </mat-select>
+          </mat-form-field>
+        </div>
+        <div class="col col-12">
+          <mat-form-field appearance="outline" class="d-block">
+            <mat-label>Date tagged as positive</mat-label>
+            <input
+              matInput
+              formControlName="dateTaggedAsPositive"
+              [matDatepicker]="positiveDatePicker"
+              placeholder="MM/DD/YYYY"
+              name="positiveDate"
+              (focus)="positiveDatePicker.open()"
+            />
+            <mat-datepicker-toggle
+              matSuffix
+              [for]="positiveDatePicker"
+            ></mat-datepicker-toggle>
+            <mat-datepicker #positiveDatePicker></mat-datepicker>
+          </mat-form-field>
+        </div>
+      </div>
+
+      <div class="row pb-3">
+        <div class="col col-12">
+          <div class="d-flex flex-row justify-content-end gap-3">
+            <button
+              class="order-2"
+              mat-flat-button
+              color="primary"
+              (click)="generateHeaderFooterTable()"
+            >
+              Trace close contacts
+            </button>
+            <button class="order-1" mat-stroked-button color="primary">
+              Cancel
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="progress-logs col col-12 col-sm-12 col-md-12 col-lg-6 col-xl-6 pb-5 border-start">
+      <div class="row">
+        <div class="col-12">
+          <h5>Progress Logs</h5>
+        </div>
+      </div>
+      <div class="row" *ngFor="let progress of progressList">
+        <div class="col-3">
+          <p [class]="'text-' + progress.status + ' fs-6 text-end'"><small>
+            {{
+              progress.status === "success" ? "Done" : 
+              progress.status === "danger" ? "Failed" : 
+              progress.status === "warning" ? "Processing" : "Pending"
+            }}
+          </small></p>
+        </div>
+        <div class="col-9">
+          <p class="text-muted fw-light"><small>{{ progress.text }}</small></p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

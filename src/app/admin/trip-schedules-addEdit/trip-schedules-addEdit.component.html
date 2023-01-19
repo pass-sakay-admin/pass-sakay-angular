@@ -1,0 +1,165 @@
+<div class="passenger-page container">
+  <div class="row pt-3">
+    <div class="passenger-page-title col col-12">
+      <div class="d-flex flex-row justify-content-between align-items-center">
+        <h1 class="m-0 p-0 admin-page-title">
+          Trip Schedules
+          <span class="text-muted">| Edit Trip Schedule Info</span>
+        </h1>
+        <button
+          class="m-0 p-0"
+          mat-fab
+          color="warn"
+          aria-label="Edit Profile"
+          (click)="onCancelAddEdit()"
+        >
+          <mat-icon>close</mat-icon>
+        </button>
+      </div>
+    </div>
+  </div>
+  <div class="row pt-5">
+    <div
+      class="passenger-profile-form col col-12 col-sm-12 col-md-12 col-lg-8 col-xl-8 pb-5"
+      [formGroup]="tripScheduleDataFormGroup"
+    >
+      <div class="row pb-3">
+        <div class="col col-12">
+          <div class="form-group-name">TRIP SCHEDULE STATUS</div>
+        </div>
+        <div class="col col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4 pb-3">
+          <div class="form-group">
+            <label>Status</label>
+            <div class="custom-radio d-flex flex-row gap-3 align-items-center">
+              <div class="form-check form-check-inline">
+                <input
+                  class="form-check-input"
+                  formControlName="status"
+                  type="radio"
+                  name="status"
+                  id="active"
+                  value="Active"
+                />
+                <label class="form-check-label" for="active">Active</label>
+              </div>
+              <div class="form-check form-check-inline">
+                <input
+                  class="form-check-input"
+                  formControlName="status"
+                  type="radio"
+                  name="status"
+                  id="inactive"
+                  value="Inactive"
+                />
+                <label class="form-check-label" for="inactive">Inactive</label>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="row pb-3">
+        <div class="col col-12">
+          <div class="form-group-name">TRIP SCHEDULE INFORMATION</div>
+        </div>
+        <div class="col col-12 col-sm-12 col-md-6 col-lg-6 col-xl-6 pb-3">
+          <div class="form-group">
+            <label>Name / Title</label>
+            <input
+              type="text"
+              formControlName="name"
+              class="form-control"
+              aria-describedby="nameHelp"
+              placeholder="Enter Bus Name"
+            />
+            <!-- <small id="lastnameHelp" class="form-text text-muted">
+                We'll never share your email with anyone else.
+            </small> -->
+          </div>
+        </div>
+        <div class="col col-12 col-sm-12 col-md-6 col-lg-6 col-xl-6 pb-3">
+          <div class="form-group">
+            <label>Days Routine</label>
+            <input
+              type="text"
+              class="form-control"
+              formControlName="daysRoutine"
+              aria-describedby="daysRoutineHelp"
+              placeholder="Enter Days Routine"
+            />
+          </div>
+        </div>
+        <div class="col col-12 col-sm-12 col-md-6 col-lg-6 col-xl-6 pb-3">
+          <div class="form-group">
+            <label>Start Time</label>
+            <input
+              type="text"
+              class="form-control"
+              formControlName="startTime"
+              aria-describedby="startTimeHelp"
+              placeholder="Enter Start Time"
+            />
+          </div>
+        </div>
+        <div class="col col-12 col-sm-12 col-md-6 col-lg-6 col-xl-6 pb-3">
+          <div class="form-group">
+            <label>End Time</label>
+            <input
+              type="text"
+              class="form-control"
+              formControlName="endTime"
+              aria-describedby="endTimeHelp"
+              placeholder="Enter End Time"
+            />
+          </div>
+        </div>
+        <div class="col col-12 col-sm-12 col-md-6 col-lg-6 col-xl-6 pb-3">
+          <div class="form-group">
+            <label>Starting Point</label>
+            <input
+              type="text"
+              class="form-control"
+              formControlName="startingPoint"
+              aria-describedby="startingPointHelp"
+              placeholder="Enter Starting Point"
+            />
+          </div>
+        </div>
+        <div class="col col-12 col-sm-12 col-md-6 col-lg-6 col-xl-6 pb-3">
+          <div class="form-group">
+            <label>Finishing Point</label>
+            <input
+              type="text"
+              class="form-control"
+              formControlName="finishingPoint"
+              aria-describedby="finishingPointHelp"
+              placeholder="Enter Finishing Point"
+            />
+          </div>
+        </div>
+      </div>
+
+      <div class="row pb-3">
+        <div class="col col-12">
+          <div class="d-flex flex-row justify-content-end gap-3">
+            <button
+              class="order-2"
+              mat-flat-button
+              color="primary"
+              (click)="onSaveTripScheduleData()"
+            >
+              Save
+            </button>
+            <button
+              class="order-1"
+              mat-stroked-button
+              color="primary"
+              (click)="onCancelAddEdit()"
+            >
+              Cancel
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

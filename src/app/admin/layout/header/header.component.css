@@ -1,0 +1,38 @@
+.example-spacer {
+  flex: 1 1 auto;
+}
+
+mat-toolbar {
+  padding: 0px 36px 0px 36px;
+  width: 100%;
+}
+
+mat-toolbar div ul {
+  list-style: none;
+  vertical-align: middle;
+}
+
+header {
+  width: 100%;
+  flex-shrink: 0;
+  flex-grow: 0;
+  min-width: 100px;
+  display: flex;
+}
+
+.user-avatar {
+    width: 24pt;
+    height: 24pt;
+    line-height: 24pt;
+    border-radius: 50%;
+}
+
+#app-name {
+  font-size: larger;
+  font-weight: 900;
+  letter-spacing: -1px;
+}
+
+#app-name #app-name-emp {
+  color: #eed34d;
+}

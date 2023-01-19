@@ -1,0 +1,33 @@
+.app-text-logo {
+  font-weight: 800;
+  font-size: 18pt;
+  margin-bottom: 8px;
+  padding: 12px 0 4px 32px;
+  letter-spacing: -2px;
+
+  .pass {
+    color: #287cb1;
+    padding-right: 4px;
+  }
+  .sakay {
+    color: #428a82;
+  }
+  .passenger {
+    color: #1b1b1b;
+    padding-left: 8px;
+    font-weight: 600;
+    font-size: 14pt;
+  }
+}
+
+.nav-item {
+    padding-left: 8px;
+    padding-right: 8px;
+    .nav-link {
+        &.active {
+            color: black;
+            font-weight: 400;
+            border-bottom: 2px solid black;
+        }
+    }
+}

@@ -1,0 +1,203 @@
+<div class="passenger-page container">
+  <div class="row pt-3">
+    <div class="passenger-page-title col col-12">
+      <div class="d-flex flex-row justify-content-between align-items-center">
+        <h1 class="m-0 p-0 admin-page-title">
+          Bus Account 
+          <span class="text-muted">| Edit Bus Account Info</span>
+        </h1>
+        <button
+          class="m-0 p-0"
+          mat-fab
+          color="warn"
+          aria-label="Edit Profile"
+          (click)="onCancelAddEdit()"
+        >
+          <mat-icon>close</mat-icon>
+        </button>
+      </div>
+    </div>
+  </div>
+  <div class="row pt-5">
+    <div
+      class="passenger-profile-form col col-12 col-sm-12 col-md-12 col-lg-8 col-xl-8 pb-5"
+      [formGroup]="busAccountDataFormGroup"
+    >
+      <div class="row pb-3">
+        <div class="col col-12">
+          <div class="form-group-name">BUS ACCOUNT STATUS</div>
+        </div>
+        <div class="col col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4 pb-3">
+          <div class="form-group">
+            <label>Status</label>
+            <div class="custom-radio d-flex flex-row gap-3 align-items-center">
+              <div class="form-check form-check-inline">
+                <input
+                  class="form-check-input"
+                  formControlName="status"
+                  type="radio"
+                  name="status"
+                  id="active"
+                  value="Active"
+                />
+                <label class="form-check-label" for="active">Active</label>
+              </div>
+              <div class="form-check form-check-inline">
+                <input
+                  class="form-check-input"
+                  formControlName="status"
+                  type="radio"
+                  name="status"
+                  id="inactive"
+                  value="Inactive"
+                />
+                <label class="form-check-label" for="inactive">Inactive</label>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="col col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4 pb-3">
+          <div class="form-group">
+            <label>Approved?</label>
+            <div class="custom-radio d-flex flex-row gap-3 align-items-center">
+              <div class="form-check form-check-inline">
+                <input
+                  class="form-check-input"
+                  formControlName="isApproved"
+                  type="radio"
+                  name="isApproved"
+                  id="yes"
+                  value="Approved"
+                />
+                <label class="form-check-label" for="yes">Yes</label>
+              </div>
+              <div class="form-check form-check-inline">
+                <input
+                  class="form-check-input"
+                  formControlName="isApproved"
+                  type="radio"
+                  name="isApproved"
+                  id="no"
+                  value="Disapproved"
+                />
+                <label class="form-check-label" for="no">No</label>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="row pb-3">
+        <div class="col col-12">
+          <div class="form-group-name">BUS INFORMATION</div>
+        </div>
+        <div class="col col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4 pb-3">
+          <div class="form-group">
+            <label>Bus Name</label>
+            <input
+              type="text"
+              formControlName="busName"
+              class="form-control"
+              aria-describedby="busNameHelp"
+              placeholder="Enter Bus Name"
+            />
+            <!-- <small id="lastnameHelp" class="form-text text-muted">
+                We'll never share your email with anyone else.
+            </small> -->
+          </div>
+        </div>
+        <div class="col col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4 pb-3">
+          <div class="form-group">
+            <label>Plate Number</label>
+            <input
+              type="text"
+              class="form-control"
+              formControlName="busNumber"
+              aria-describedby="busNumberHelp"
+              placeholder="Enter Plate Number"
+            />
+          </div>
+        </div>
+        <div class="col col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4 pb-3">
+          <div class="form-group">
+            <label>Bus Province</label>
+            <input
+              type="text"
+              class="form-control"
+              formControlName="busProvince"
+              aria-describedby="busProvinceHelp"
+              placeholder="Enter Bus Province"
+            />
+          </div>
+        </div>
+      </div>
+
+      <div class="row pb-3">
+        <div class="col col-12">
+          <div class="form-group-name">OPERATOR INFORMATION</div>
+        </div>
+        <div class="col col-12 col-sm-12 col-md-12 col-lg-12 col-xl-12 pb-3">
+          <div class="form-group">
+            <label>Operator Fullname</label>
+            <input
+              type="text"
+              formControlName="operatorFullName"
+              class="form-control"
+              aria-describedby="operatorFullNameHelp"
+              placeholder="Enter Fullname"
+            />
+          </div>
+        </div>
+        <div class="col col-12 col-sm-12 col-md-6 col-lg-6 col-xl-6 pb-3">
+          <div class="form-group">
+            <label>Operator Phone Number</label>
+            <input
+              type="text"
+              formControlName="operatorPhoneNumber"
+              class="form-control"
+              aria-describedby="operatorPhoneNumberHelp"
+              placeholder="Enter Phone Number"
+            />
+            <!-- <small id="phoneNumberHelp" class="form-text text-muted">
+                We'll never share your email with anyone else.
+            </small> -->
+          </div>
+        </div>
+        <div class="col col-12 col-sm-12 col-md-6 col-lg-6 col-xl-6 pb-3">
+          <div class="form-group">
+            <label>Operator Position</label>
+            <input
+              type="text"
+              class="form-control"
+              formControlName="operatorPosition"
+              aria-describedby="operatorPositionHelp"
+              placeholder="Enter Email Address"
+            />
+          </div>
+        </div>
+      </div>
+
+      <div class="row pb-3">
+        <div class="col col-12">
+          <div class="d-flex flex-row justify-content-end gap-3">
+            <button
+              class="order-2"
+              mat-flat-button
+              color="primary"
+              (click)="onSaveBusAccountData()"
+            >
+              Save
+            </button>
+            <button
+              class="order-1"
+              mat-stroked-button
+              color="primary"
+              (click)="onCancelAddEdit()"
+            >
+              Cancel
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

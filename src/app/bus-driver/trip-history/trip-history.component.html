@@ -1,0 +1,100 @@
+<div class="passenger-page container">
+  <div class="row pt-5">
+    <div class="passenger-page-title col col-12">
+      <div class="d-flex flex-row justify-content-between align-items-center">
+        <h1 class="m-0 p-0">Trip History</h1>
+        <button class="m-0 p-0" mat-fab color="warn" (click)="save()" aria-label="Edit Profile">
+          <mat-icon>save_alt</mat-icon>
+        </button>
+      </div>
+    </div>
+  </div>
+  <div class="row pt-5" id="content" #content>
+    <!-- table -->
+    <div class="col col-12">
+      <!-- handleFilterTripHistory("All") -->
+      <div class="flex flex-row gap-2 p-2">
+        <button mat-stroked-button color="primary" (click)="handleFilterTripHistory('All')">
+          All
+        </button>
+        <button mat-stroked-button color="primary" (click)="handleFilterTripHistory('scan-in')">
+          On-boarding
+        </button>
+        <button mat-stroked-button color="primary" (click)="handleFilterTripHistory('scan-out')">
+          Off-boarding
+        </button>
+      </div>
+    </div>
+    <div class="col col-12">
+      <div class="table-responsive table-responsive-sm">
+        <table class="table table-hover">
+          <!-- <caption>
+            Showing 10 of {{ 45 }} trip records, export to view them all.
+          </caption> -->
+          <thead>
+            <tr>
+              <th scope="col">#</th>
+              <th scope="col">Passenger Name</th>
+              <th scope="col">Scan Type</th>
+              <th scope="col">Trip Sched</th>
+              <th scope="col">Pickup / Dropoff Place</th>
+              <th scope="col">Vaccine Code</th>
+              <th scope="col">Seat Number</th>
+              <th scope="col">Temperature</th>
+              <th scope="col">Date</th>
+              <th scope="col">Time</th>
+            </tr>
+          </thead>
+          <tbody *ngIf="!filterMode">
+            <tr *ngIf="tripHistoryList.length === 0">
+              <td colspan="7" class="text-center text-muted bg-light py-4">
+                No data retrieved.
+              </td>
+            </tr>
+              <tr *ngFor="let tripHistory of tripHistoryList">
+                <th scope="row">{{ tripHistory.rowId }}</th>
+                <td>{{ tripHistory.PassengerName }}</td>
+                <td>
+                  <span *ngIf="tripHistory.ScanType === 'scan-in'">Scan In</span>
+                  <span *ngIf="tripHistory.ScanType === 'scan-out'"
+                    >Scan Out</span
+                  >
+                </td>
+                <td>{{ tripHistory.TripSched }}</td>
+                <td>{{ tripHistory.PlaceOfPickUp }}</td>
+                <td>{{ tripHistory.VaccineCode }}</td>
+                <td>{{ tripHistory.SeatNumber }}</td>
+                <td>{{ tripHistory.Temperature }}</td>
+                <td>{{ tripHistory.Date }}</td>
+                <td>{{ tripHistory.Time }}</td>
+              </tr>
+          </tbody>
+          <tbody *ngIf="filterMode">
+            <tr *ngIf="filteredTripHistoryList.length === 0">
+              <td colspan="10" class="text-center text-muted bg-light py-4">
+                No data retrieved.
+              </td>
+            </tr>
+              <tr *ngFor="let tripHistory of filteredTripHistoryList">
+                <th scope="row">{{ tripHistory.rowId }}</th>
+                <td>{{ tripHistory.PassengerName }}</td>
+                <td>
+                  <span *ngIf="tripHistory.ScanType === 'scan-in'">Scan In</span>
+                  <span *ngIf="tripHistory.ScanType === 'scan-out'"
+                    >Scan Out</span
+                  >
+                </td>
+                <td>{{ tripHistory.TripSched }}</td>
+                <td>{{ tripHistory.PlaceOfPickUp }}</td>
+                <td>{{ tripHistory.VaccineCode }}</td>
+                <td>{{ tripHistory.SeatNumber }}</td>
+                <td>{{ tripHistory.Temperature }}</td>
+                <td>{{ tripHistory.Date }}</td>
+                <td>{{ tripHistory.Time }}</td>
+              </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,235 @@
+<div class="passenger-page container">
+  <div class="row pt-4">
+    <div class="passenger-page-title col col-12">
+      <div class="d-flex flex-row justify-content-between align-items-center">
+        <!-- <h1 class="m-0 p-0">Dashboard</h1> -->
+      </div>
+    </div>
+  </div>
+  <div class="row">
+    <div
+      class="col col-12 col-sm-12 col-md-12 col-lg-4 col-xl-4"
+      [formGroup]="tripDetailsFormGroup"
+    >
+      <div class="row">
+        <div class="col col-12 pb-3">
+          <div class="form-group-name">START QR SCANNING</div>
+        </div>
+        <div class="qr-scan-input col col-12">
+          <div class="form-group mb-3">
+            <label>Select trip action</label>
+            <div class="custom-radio d-flex flex-row gap-3 align-items-center">
+              <div class="form-check form-check-inline">
+                <input
+                  class="form-check-input"
+                  formControlName="tripAction"
+                  type="radio"
+                  name="tripAction"
+                  id="onboarding"
+                  value="scan-in"
+                />
+                <label class="form-check-label" for="onboarding"
+                  >On-boarding</label
+                >
+              </div>
+              <div class="form-check form-check-inline">
+                <input
+                  class="form-check-input"
+                  formControlName="tripAction"
+                  type="radio"
+                  name="tripAction"
+                  id="offboarding"
+                  value="scan-out"
+                />
+                <label class="form-check-label" for="offboarding"
+                  >Off-boarding</label
+                >
+              </div>
+            </div>
+          </div>
+          <div class="form-group">
+            <mat-form-field appearance="outline" class="d-block">
+              <mat-label>Temperature (max 37.2 C)</mat-label>
+              <input
+                type="number"
+                matInput
+                min="33"
+                max="43"
+                name="temperature"
+                formControlName="temperature">
+            </mat-form-field>
+          </div>
+          <div class="form-group">
+            <mat-form-field appearance="outline" class="d-block">
+              <mat-label>Vaccine Code</mat-label>
+              <input
+                type="text"
+                matInput
+                name="vaccineCode"
+                formControlName="vaccineCode">
+            </mat-form-field>
+          </div>
+          <div class="form-group">
+            <mat-form-field appearance="outline" class="d-block">
+              <mat-label>Select Trip Schedule</mat-label>
+              <mat-select formControlName="tripSched">
+                <mat-option
+                  *ngFor="let tripSched of tripScheduleList"
+                  [value]="tripSched._id"
+                  >{{ tripSched.ScheduleName }}</mat-option
+                >
+              </mat-select>
+            </mat-form-field>
+          </div>
+          <div class="form-group">
+            <mat-form-field appearance="outline" class="d-block">
+              <mat-label>Pickup / Dropoff Landmark (optional)</mat-label>
+              <input
+                type="text"
+                matInput
+                name="landmark"
+                formControlName="landmark">
+            </mat-form-field>
+          </div>
+          <div class="form-group">
+            <mat-form-field appearance="outline" class="d-block">
+              <mat-label>Pickup / Dropoff City</mat-label>
+              <mat-select formControlName="tripPlaceOfScan">
+                <mat-option
+                  *ngFor="let city of parsedCityList"
+                  [value]="city.citymunDesc"
+                  >{{ city.citymunDesc }}</mat-option
+                >
+              </mat-select>
+            </mat-form-field>
+          </div>
+        </div>
+        <div class="col col-12 mb-3 qr-seatNumber">
+          <button mat-flat-button color="primary" (click)="openScrollableContent(longContent)">
+            {{ selectedSeatNumber ? "Chosen Seat - " + selectedSeatNumber : "Choose a Seat" }}
+          </button>
+          <ng-template #longContent let-modal>
+            <div class="modal-header">
+              <h4 class="modal-title">Choose a Seat for a Passenger</h4>
+              <button type="button" class="btn-close" aria-label="Close" (click)="modal.dismiss('Cross click')"></button>
+            </div>
+            <div class="modal-body">
+              <div class="row p-2">
+                <div class="left-side col-6">
+                  <div class="row">
+                    <div class="col col-12 text-center">
+                      Left Side (Driver's Seat)
+                    </div>
+                    <div *ngFor="let seatCode of left" class="LeftSide col col-12 text-center">
+                      <div class="form-check form-check-inline">
+                        <input
+                          class="form-check-input"
+                          formControlName="seatNumber"
+                          type="radio"
+                          name="seatNumber"
+                          [id]="'L'+seatCode"
+                          [value]="'L'+seatCode"
+                        />
+                        <label class="form-check-label" [for]="'L'+seatCode">
+                          {{ 'L'+seatCode }}
+                        </label>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div class="right-side col-6">
+                  <div class="row">
+                    <div class="col col-12 text-center">
+                      Right Side (Door Side)
+                    </div>
+                    <div *ngFor="let seatCode of right" class="RightSide col col-12 text-center">
+                      <div class="form-check form-check-inline">
+                        <input
+                          class="form-check-input"
+                          formControlName="seatNumber"
+                          type="radio"
+                          name="seatNumber"
+                          [id]="'R'+seatCode"
+                          [value]="'R'+seatCode"
+                        />
+                        <label class="form-check-label" [for]="'R'+seatCode">
+                          {{ 'R'+seatCode }}
+                        </label>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div class="col col-12 mt-3`">
+                  <div class="flex flex-row justify-content-between">
+                    <div class="text-center" *ngFor="let seatCode of back">
+                      <div class="form-check form-check-inline">
+                        <input
+                          class="form-check-input"
+                          formControlName="seatNumber"
+                          type="radio"
+                          name="seatNumber"
+                          [id]="seatCode"
+                          [value]="seatCode"
+                        />
+                        <label class="form-check-label" [for]="seatCode">
+                          {{ seatCode }}
+                        </label>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="modal-footer">
+              <button mat-flat-button color="primary" (click)="modal.close()">
+                Choose selected seat
+              </button>
+            </div>
+          </ng-template>
+        </div>
+      </div>
+    </div>
+    <div
+      class="col col-12 col-sm-12 col-md-12 col-lg-8 col-xl-8 pb-3"
+    >
+      <div class="card">
+        <div class="card-body">
+          <mat-form-field appearance="outline" class="d-block">
+            <mat-label>Select Camera Device</mat-label>
+            <mat-select
+              [value]="deviceSelected"
+              (valueChange)="onDeviceSelectChange($event)"
+            >
+              <mat-option value="">No Device Selected</mat-option>
+              <mat-option
+                *ngFor="let device of availableDevices"
+                [value]="device.deviceId"
+                >{{ device.label }}</mat-option
+              >
+            </mat-select>
+          </mat-form-field>
+          <zxing-scanner
+            *ngIf="scannerEnabled"
+            #scanner
+            [formats]="allowedFormats"
+            (scanSuccess)="onCodeResult($event)"
+            [device]="deviceCurrent"
+            (deviceChange)="onDeviceChange($event)"
+            (camerasFound)="onCamerasFound($event)"
+          ></zxing-scanner>
+          <strong>{{ qrResultString }}</strong>
+          <div class="d-grid">
+            <button
+              (click)="enableScanning()"
+              [disabled]="scannerEnabled || isFormIncomplete"
+              class="btn btn-primary btn-lg"
+              data-bs-toggle="button"
+            >
+              Start Scan
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
