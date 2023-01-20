@@ -244,10 +244,7 @@ export class QrScannerComponent implements OnInit {
     if (tripAction && tripAction.value === "scan-in") {
       if (
         (!tripPlaceOfScan?.value) || 
-        (!tripSched?.value) || 
-        (!temperature?.value) || 
-        (!seatNumber?.value) || 
-        (!vaccineCode?.value)
+        (!tripSched?.value)
       ) {
         this.isFormIncomplete = true;
       } else {
@@ -269,10 +266,7 @@ export class QrScannerComponent implements OnInit {
     if (
       tripPlaceOfScan?.value &&
       tripAction?.value &&
-      tripSched?.value &&
-      temperature?.value &&
-      seatNumber?.value &&
-      vaccineCode?.value
+      tripSched?.value
     ) {
       this.isFormIncomplete = true;
     }
