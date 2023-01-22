@@ -11,10 +11,10 @@
   </div>
   <div class="row pt-5">
     <div
-      class="passenger-profile-form col col-12 col-sm-12 col-md-12 col-lg-6 col-xl-6 pb-5"
+      class="passenger-profile-form col col-12 col-sm-12 col-md-12 col-lg-6 col-xl-6 pb-5 mr-3"
       [formGroup]="contactTracingForm"
     >
-      <div class="row pb-3">
+      <div class="row">
         <div class="col col-12">
           <p>*Note: Please be careful with tagging someone as Covid Positive as it may cause an issue.</p>
         </div>
@@ -71,26 +71,31 @@
           </mat-form-field>
         </div>
       </div>
-
-      <div class="row pb-3">
+      <div class="row">
         <div class="col col-12">
           <div class="d-flex flex-row justify-content-end gap-3">
             <button
               class="order-2"
+              mat-stroked-button
+              color="primary"
+              (click)="onClearForm()"
+            >
+              Clear
+            </button>
+            <button
+              class="order-2"
               mat-flat-button
               color="primary"
-              (click)="generateHeaderFooterTable()"
+              (click)="onTraceCloseContacts()"
+              [disabled]="isFormIncomplete"
             >
               Trace close contacts
-            </button>
-            <button class="order-1" mat-stroked-button color="primary">
-              Cancel
             </button>
           </div>
         </div>
       </div>
     </div>
-    <div class="progress-logs col col-12 col-sm-12 col-md-12 col-lg-6 col-xl-6 pb-5 border-start">
+    <div class="d-none progress-logs col col-12 col-sm-12 col-md-12 col-lg-6 col-xl-6 pb-5 border-start">
       <div class="row">
         <div class="col-12">
           <h5>Progress Logs</h5>

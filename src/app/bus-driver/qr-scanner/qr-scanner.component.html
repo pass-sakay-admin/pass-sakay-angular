@@ -221,7 +221,7 @@
           <div class="d-grid">
             <button
               (click)="enableScanning()"
-              [disabled]="scannerEnabled || isFormIncomplete"
+              [disabled]="isFormIncomplete"
               class="btn btn-primary btn-lg"
               data-bs-toggle="button"
             >

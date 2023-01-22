@@ -115,6 +115,7 @@ export class QrScannerComponent implements OnInit {
       const tripType = this.tripDetailsFormGroup.get('tripAction');
       const tripSched = this.tripDetailsFormGroup.get('tripSched');
       const temperature = this.tripDetailsFormGroup.get('temperature');
+      const vaccineCode = this.tripDetailsFormGroup.get('vaccineCode');
       const seatNumber = this.tripDetailsFormGroup.get('seatNumber');
       const landmark = this.tripDetailsFormGroup.get('landmark');
       const tripPlaceOfScan = this.tripDetailsFormGroup.get('tripPlaceOfScan');
@@ -126,6 +127,7 @@ export class QrScannerComponent implements OnInit {
         busAccount: busAccount || null,
         tripSched: tripSched?.value || null,
         temperature: temperature?.value || null,
+        vaccineCode: vaccineCode?.value || null,
         landmark: landmark?.value || null,
         seatNumber: seatNumber?.value || null,
         tripPlaceOfScan: tripPlaceOfScan?.value || null,
@@ -143,6 +145,14 @@ export class QrScannerComponent implements OnInit {
           );
           console.log(response)
           this.cd.markForCheck();
+          this.isFormIncomplete = true;
+          Object.keys(this.tripDetailsFormGroup.controls).forEach(key => {
+            const control = this.tripDetailsFormGroup.get(key);
+            if (control) {
+              control.setErrors(null);
+              control.setValue("");
+            }
+          });
         }
       })
       .catch((err: any) => {
@@ -234,41 +244,39 @@ export class QrScannerComponent implements OnInit {
     const seatNumber = this.tripDetailsFormGroup.get('seatNumber');
     const landmark = this.tripDetailsFormGroup.get('landmark');
     const vaccineCode = this.tripDetailsFormGroup.get('vaccineCode');
-
-    if (seatNumber?.value) {
-      this.selectedSeatNumber = seatNumber?.value;
-    } else {
-      this.selectedSeatNumber = "";
-    }
-
-    if (tripAction && tripAction.value === "scan-in") {
-      if (
-        (!tripPlaceOfScan?.value) || 
-        (!tripSched?.value)
-      ) {
-        this.isFormIncomplete = true;
-      } else {
-        this.isFormIncomplete = false;
-      }
-    }
-
-    if (tripAction && tripAction?.value === "scan-out") {
-      if (
-        (!tripPlaceOfScan?.value) || 
-        (!tripSched?.value) 
-      ) {
-        this.isFormIncomplete = true;
-      } else {
-        this.isFormIncomplete = false;
-      }
-    }
-
+    
     if (
-      tripPlaceOfScan?.value &&
-      tripAction?.value &&
-      tripSched?.value
+      !tripPlaceOfScan?.value ||
+      !tripAction?.value ||
+      !tripSched?.value
     ) {
       this.isFormIncomplete = true;
+    } else {
+      if (tripAction?.value === "scan-in") {
+        if (
+          !tripPlaceOfScan?.value ||
+          !tripAction?.value ||
+          !tripSched?.value ||
+          !temperature?.value ||
+          !seatNumber?.value ||
+          !vaccineCode?.value
+        ) {
+          this.isFormIncomplete = true;
+        } else {
+          this.isFormIncomplete = false;
+        }
+      }
+      if (tripAction?.value === "scan-out") {
+        if (
+          !tripPlaceOfScan?.value ||
+          !tripAction?.value ||
+          !tripSched?.value
+        ) {
+          this.isFormIncomplete = true;
+        } else {
+          this.isFormIncomplete = false;
+        }
+      }
     }
   }
 }

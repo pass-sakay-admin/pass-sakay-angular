@@ -28,7 +28,7 @@ export class HttpRequestInterceptor implements HttpInterceptor {
             duration: 5000,
           });
         }
-        return throwError(() => new Error(error.error.message));
+        return throwError(() => new Error(error.error));
       })
     );
   }

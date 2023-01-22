@@ -145,6 +145,8 @@ export class PassengerAddEditComponent implements OnInit {
         control.setValue(null);
       }
     });
+    this.passengerDataFormGroup.markAsPristine();
+    this.passengerDataFormGroup.markAsUntouched();
     this.router.navigate(['/admin/passengers']);
   };
 

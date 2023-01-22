@@ -142,6 +142,8 @@ export class BusAccountAddEditComponent implements OnInit {
         control.setValue(null);
       }
     });
+    this.busAccountDataFormGroup.markAsPristine();
+    this.busAccountDataFormGroup.markAsUntouched();
     this.router.navigate(['/admin/bus-accounts']);
   };
 

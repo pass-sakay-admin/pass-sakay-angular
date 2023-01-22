@@ -35,6 +35,7 @@ export class ContactTracingComponent implements OnInit {
   public model!: NgbDateStruct;
   @ViewChild('content') content!: ElementRef;
   public breakpoint: number = 0;
+  public isFormIncomplete: boolean = true;
 
   public tripHistoryList: Array<any> = [];
   public contactTracingForm!: FormGroup;
@@ -225,6 +226,39 @@ export class ContactTracingComponent implements OnInit {
     return payload;
   };
 
+  onClearForm = () => {
+    Object.keys(this.contactTracingForm.controls).forEach(key => {
+      const control = this.contactTracingForm.get(key);
+      if (control) {
+        control.setErrors(null);
+        control.setValue(null);
+      }
+    });
+    this.contactTracingForm.markAsPristine();
+    this.contactTracingForm.markAsUntouched();
+  }
+
+  onTraceCloseContacts = () => {
+    const passengerAccount = this.contactTracingForm.get('passengerAccount');
+    const dateTaggedAsPositive = this.contactTracingForm.get('dateTaggedAsPositive');
+
+    const body = {
+      passengerAccount: passengerAccount,
+      dateFrom: moment(dateTaggedAsPositive?.value).subtract(5,'days'),
+      dateTo: moment(dateTaggedAsPositive?.value)
+    }
+    console.log(body)
+
+    this.passSakayAPIService.getTripHistoryOfPositive(body)
+      .then((data: any) => {
+        console.log(data)
+        this.tripHistoryList = data;
+      })
+      .catch((error: any) => {
+        console.error(error);
+      })
+  }
+
   // save = (): void => {
   //   let content = this.content.nativeElement;
   //   let doc: any = new jsPDF('p', 'mm', 'a4');
@@ -318,5 +352,18 @@ export class ContactTracingComponent implements OnInit {
     // this.generatePDFReport();
   };
 
-  ngDoCheck(): void {}
+  ngDoCheck(): void {
+    let isInputNull: number = 0;
+    Object.keys(this.contactTracingForm.controls).forEach((key: string) => {
+      const controlValue = this.contactTracingForm.controls[key];
+      if (!controlValue.value) {
+        isInputNull++;
+      }
+    });
+    if (isInputNull) {
+      this.isFormIncomplete = true;
+    } else {
+      this.isFormIncomplete = false;
+    }
+  }
 }

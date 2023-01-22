@@ -333,6 +333,24 @@ export class PassSakayCollectionService {
       .pipe(map((data: Object) => data));
   }
 
+  public getTripHistoryOfPositive(body: any): Promise<any> {
+    return new Promise<any>((resolve: any, reject: any) => {
+      this.apiGetTripHistoryOfPositive(body).subscribe((data: Object) => {
+        resolve(data);
+      }),
+      (err: any): void => {
+        reject(err);
+      };
+    });
+  }
+  private apiGetTripHistoryOfPositive(body: any): Observable<any> {
+    const headers: HttpHeaders = new HttpHeaders(this.httpHeaders);
+    const endpoint = environment.api_base_url + 'scanned-qr/get/trip-history';
+    return this.httpClientNoInterceptor
+      .post(endpoint, body, { headers: headers })
+      .pipe(map((data: Object) => data));
+  }
+
   public getTripHistoryCount(body: any): Promise<any> {
     return new Promise<any>((resolve: any, reject: any) => {
       this.apiGetTripHistoryCount(body).subscribe((data: Object) => {

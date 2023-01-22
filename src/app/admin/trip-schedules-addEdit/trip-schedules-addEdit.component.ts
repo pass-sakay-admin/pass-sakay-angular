@@ -137,6 +137,8 @@ export class TripScheduleAddEditComponent implements OnInit {
         control.setValue(null);
       }
     });
+    this.tripScheduleDataFormGroup.markAsPristine();
+    this.tripScheduleDataFormGroup.markAsUntouched();
     this.router.navigate(['/admin/trip-schedules']);
   };
 
