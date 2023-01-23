@@ -29,6 +29,7 @@ import { MatSidenavModule } from '@angular/material/sidenav';
 import { MatGridListModule } from '@angular/material/grid-list';
 import { MatSelectModule } from '@angular/material/select';
 import { MatDatepickerModule } from '@angular/material/datepicker';
+import { MatStepperModule } from '@angular/material/stepper';
 
 @NgModule({
   declarations: [
@@ -62,6 +63,7 @@ import { MatDatepickerModule } from '@angular/material/datepicker';
     MatRadioModule,
     MatSelectModule,
     MatDatepickerModule,
+    MatStepperModule,
 
     NgbModule,
   ]

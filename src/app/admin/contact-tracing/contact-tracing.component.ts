@@ -241,9 +241,34 @@ export class ContactTracingComponent implements OnInit {
   onTraceCloseContacts = () => {
     const passengerAccount = this.contactTracingForm.get('passengerAccount');
     const dateTaggedAsPositive = this.contactTracingForm.get('dateTaggedAsPositive');
+    const status = this.contactTracingForm.get('status');
 
     const body = {
-      passengerAccount: passengerAccount,
+      passengerAccount: passengerAccount?.value,
+      dateFrom: moment(dateTaggedAsPositive?.value),
+      status: status?.value
+    }
+    console.log(body);
+
+    this.passSakayAPIService.saveNewPositiveCase(body)
+      .then((data: any) => {
+        console.log(data);
+        if (data.status) {
+          this.isFormIncomplete = true;
+          console.log(data.newPositiveCase._id);
+        }
+      })
+      .catch((error: any) => {
+        console.error(error);
+      });
+  }
+
+  checkTripHistory = () => {
+    const passengerAccount = this.contactTracingForm.get('passengerAccount');
+    const dateTaggedAsPositive = this.contactTracingForm.get('dateTaggedAsPositive');
+    const status = this.contactTracingForm.get('status');
+    const body = {
+      passengerAccount: passengerAccount?.value,
       dateFrom: moment(dateTaggedAsPositive?.value).subtract(5,'days'),
       dateTo: moment(dateTaggedAsPositive?.value)
     }
@@ -256,7 +281,7 @@ export class ContactTracingComponent implements OnInit {
       })
       .catch((error: any) => {
         console.error(error);
-      })
+      });
   }
 
   // save = (): void => {
