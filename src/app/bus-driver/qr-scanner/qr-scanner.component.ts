@@ -27,6 +27,7 @@ export class QrScannerComponent implements OnInit {
 
   public scanPayload: Array<any> = [];
   public isFormIncomplete: boolean = true;
+  public isHiddenInput: boolean = false;
 
   public hasDevices!: boolean;
   public hasPermission!: boolean;
@@ -244,6 +245,11 @@ export class QrScannerComponent implements OnInit {
     const seatNumber = this.tripDetailsFormGroup.get('seatNumber');
     const landmark = this.tripDetailsFormGroup.get('landmark');
     const vaccineCode = this.tripDetailsFormGroup.get('vaccineCode');
+    if (tripAction?.value === "scan-in") {
+      this.isHiddenInput = false;
+    } else {
+      this.isHiddenInput = true;
+    }
     
     if (
       !tripPlaceOfScan?.value ||

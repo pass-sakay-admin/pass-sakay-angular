@@ -15,6 +15,9 @@ export class PassengerTripHistoryComponent implements OnInit {
   public breakpoint: number = 0;
 
   public tripHistoryList: Array<any> = [];
+  public filteredTripHistoryList: Array<any> = [];
+  public scanType: string = "";
+  public filterMode: boolean = false;
 
   constructor(
     private localStorageService: LocalStorageService,
@@ -28,7 +31,21 @@ export class PassengerTripHistoryComponent implements OnInit {
     this.getAllTripHistory();
   }
 
-  // /scanned-qr/trip-history/:passenger_id
+  handleFilterTripHistory = (scanType: string) => {
+    this.filteredTripHistoryList = this.tripHistoryList;
+    this.scanType = scanType;
+    this.filterMode = true;
+    this.filterTripHistory(scanType);
+  }
+
+  filterTripHistory = (scanType: string): any => {
+    if (scanType == "scan-in" || scanType == "scan-out") {
+      this.filteredTripHistoryList = 
+        this.filteredTripHistoryList.filter((trip: any) => trip.ScanType === scanType);
+    }
+    console.log(this.filteredTripHistoryList);
+    return this.filteredTripHistoryList
+  }
 
   getAllTripHistory = () => {
     console.log(this.passengerData.userData);
@@ -36,20 +53,30 @@ export class PassengerTripHistoryComponent implements OnInit {
       .getAllTripHistoryDataViaPassenger(this.passengerData.userData._userId)
       .then((data: any) => {
         data.forEach((tripHistory: any, index: number) => {
+          const passenger = tripHistory.passengerAccount;
+          const fullname = `
+            ${passenger.lastname}, 
+            ${passenger.firstname} 
+            ${passenger.middlename ? passenger.middlename : ""}
+          `;
           this.tripHistoryList.push({
             _id: tripHistory._id,
             Date: moment(tripHistory.date).format('MMM DD YYYY'),
             Time: moment(tripHistory.time).format('HH:mm:ss A'),
             rowId: index + 1,
+            PassengerName: fullname,
             BusName: `${tripHistory.busAccount.busName}`,
             ScanType: tripHistory.tripType,
+            Temperature: tripHistory.temperature || "N/A",
+            SeatNumber: tripHistory.seatNumber || "N/A",
+            VaccineCode: tripHistory.vaccineCode || "N/A",
             TripSched: `
               ${tripHistory.tripSched.name} 
               (${tripHistory.tripSched.startTime} - ${tripHistory.tripSched.endTime})
             `,
-            TripRoute: `
-              ${tripHistory.tripSched.startingPoint} - 
-              ${tripHistory.tripSched.finishingPoint}
+            PlaceOfPickUp: `
+              ${tripHistory.landmark} - 
+              ${tripHistory.tripPlaceOfScan}
             `,
           });
         });

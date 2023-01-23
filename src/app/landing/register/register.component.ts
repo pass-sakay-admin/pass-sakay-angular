@@ -241,7 +241,7 @@ export class RegisterComponent implements OnInit {
       BusNumber: busNumber && busNumber.value ? busNumber.value : "",
       BusProvince: busProvince && busProvince.value ? busProvince.value : "",
       OperatorFullName: operatorFullName && operatorFullName.value ? operatorFullName.value : "",
-      OperatorPosition: operatorPosition && operatorPosition.value ? operatorPosition.value : "",
+      OperatorPosition: "Conductor",
       OperatorPhoneNumber: operatorPhoneNumber && operatorPhoneNumber.value ? operatorPhoneNumber.value : "",
       Username: username && username.value ? username.value : "",
       Password: password && password.value ? password.value : "",

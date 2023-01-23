@@ -47,8 +47,11 @@
               </div>
             </div>
           </div>
-          <div class="form-group">
-            <mat-form-field appearance="outline" class="d-block">
+          <div class="form-group" [ngClass]="{'d-none' : isHiddenInput}">
+            <mat-form-field 
+              appearance="outline" 
+              class="d-block" 
+            >
               <mat-label>Temperature (max 37.2 C)</mat-label>
               <input
                 type="number"
@@ -59,8 +62,11 @@
                 formControlName="temperature">
             </mat-form-field>
           </div>
-          <div class="form-group">
-            <mat-form-field appearance="outline" class="d-block">
+          <div class="form-group" [ngClass]="{'d-none' : isHiddenInput}">
+            <mat-form-field 
+              appearance="outline" 
+              class="d-block" 
+            >
               <mat-label>Vaccine Code</mat-label>
               <input
                 type="text"
