@@ -16,37 +16,45 @@ export class RegisterComponent implements OnInit {
     private localStorageService: LocalStorageService,
     private router: Router,
     private snackBarService: MatSnackBar,
-    private passSakayAPIService: PassSakayCollectionService,
-    ) {}
-    
-    @ViewChild('screen') screen!: ElementRef;
-    @ViewChild('canvas') canvas!: ElementRef;
-    @ViewChild('downloadLink') downloadLink!: ElementRef;
-    
-    public category: string = '';
-    public passengerStepControls: string = '';
-    public busdriverStepControls: string = '';
-    public qrPassengerData: any;
-    public qrData: string = "";
-    public passengerFormGroup: FormGroup = new FormGroup({});
-    public busDriverFormGroup: FormGroup = new FormGroup({});
-    public disableBasicInfoNext: Boolean = true;
-    public disableContactInfoNext: Boolean = true;
-    public disableSuccessRegister: Boolean = true;
-    public disableBusBasicInfoNext: Boolean = true;
-    public disableBusOperatorInfoNext: Boolean = true;
-    public disableBusOperatorScanOptNext: Boolean = true;
-    public disableBusAccountInfoNext: Boolean = true;
-    public busDriverSuccessRegister: Boolean = false;
-    
-    private newBusDriver: any;
-    public parsedCityList: any;
-    
-    ngOnInit(): void {
-      this.initializePassengerFormGroup();
-      this.initializeBusDriverFormGroup();
-      this.initCityList();
-    }
+    private passSakayAPIService: PassSakayCollectionService
+  ) {}
+
+  @ViewChild('screen') screen!: ElementRef;
+  @ViewChild('canvas') canvas!: ElementRef;
+  @ViewChild('downloadLink') downloadLink!: ElementRef;
+
+  public category: string = '';
+  public passengerStepControls: string = '';
+  public busdriverStepControls: string = '';
+  public qrPassengerData: any;
+  public qrData: string = '';
+  public passengerFormGroup: FormGroup = new FormGroup({});
+  public busDriverFormGroup: FormGroup = new FormGroup({});
+  public disableBasicInfoNext: Boolean = true;
+  public disableContactInfoNext: Boolean = true;
+  public disableAccountInfoNext: Boolean = true;
+  public disableSuccessRegister: Boolean = true;
+  public disableBusBasicInfoNext: Boolean = true;
+  public disableBusOperatorInfoNext: Boolean = true;
+  public disableBusOperatorScanOptNext: Boolean = true;
+  public disableBusAccountInfoNext: Boolean = true;
+  public busDriverSuccessRegister: Boolean = false;
+
+  public sendBusOTPForm: boolean = false;
+  public sendPassengerOTPForm: boolean = false;
+  public OTPCode: string = "";
+  public OTPEmail: string = "";
+  public OTPName: string = "";
+  public disableSubmitButton: boolean = false;
+
+  private newBusDriver: any;
+  public parsedCityList: any;
+
+  ngOnInit(): void {
+    this.initializePassengerFormGroup();
+    this.initializeBusDriverFormGroup();
+    this.initCityList();
+  }
 
   initCityList(): void {
     const rawCityList = cityList.RECORDS.map((city) => {
@@ -61,6 +69,7 @@ export class RegisterComponent implements OnInit {
 
   initializePassengerFormGroup = () => {
     this.passengerFormGroup = new FormGroup({
+      otp: new FormControl('', Validators.required),
       lastname: new FormControl('', Validators.required),
       firstname: new FormControl('', Validators.required),
       middlename: new FormControl(''),
@@ -68,8 +77,8 @@ export class RegisterComponent implements OnInit {
       birthdate: new FormControl('', Validators.required),
       contactNumber: new FormControl('', Validators.required),
       emailAddress: new FormControl('', [
-        Validators.required, 
-        Validators.pattern("^[a-z0-9._%+-]+@[a-z0-9.-]+\\.[a-z]{2,4}$")
+        Validators.required,
+        Validators.pattern('^[a-z0-9._%+-]+@[a-z0-9.-]+\\.[a-z]{2,4}$'),
       ]),
       currentAddress: new FormControl('', Validators.required),
       homeAddress: new FormControl('', Validators.required),
@@ -83,6 +92,7 @@ export class RegisterComponent implements OnInit {
   initializeBusDriverFormGroup = () => {
     this.busDriverFormGroup = new FormGroup({
       // Bus Details
+      otp: new FormControl('', Validators.required),
       busName: new FormControl('', Validators.required),
       busNumber: new FormControl('', Validators.required),
       busProvince: new FormControl('', Validators.required),
@@ -91,11 +101,11 @@ export class RegisterComponent implements OnInit {
       operatorPosition: new FormControl('', Validators.required),
       operatorPhoneNumber: new FormControl('', Validators.required),
       operatorEmail: new FormControl('', [
-        Validators.required, 
-        Validators.pattern("^[a-z0-9._%+-]+@[a-z0-9.-]+\\.[a-z]{2,4}$")
+        Validators.required,
+        Validators.pattern('^[a-z0-9._%+-]+@[a-z0-9.-]+\\.[a-z]{2,4}$'),
       ]),
-      acceptHighTemp: new FormControl("", Validators.required),
-      acceptNoVaccination: new FormControl("", Validators.required),
+      acceptHighTemp: new FormControl('', Validators.required),
+      acceptNoVaccination: new FormControl('', Validators.required),
       // Account Details
       username: new FormControl('', Validators.required),
       password: new FormControl('', Validators.required),
@@ -109,16 +119,16 @@ export class RegisterComponent implements OnInit {
     console.log(this.category);
     if (selCategory === '') {
       if (this.passengerFormGroup && this.passengerFormGroup.controls) {
-        Object.keys(this.passengerFormGroup.controls).forEach(key => {
+        Object.keys(this.passengerFormGroup.controls).forEach((key) => {
           const control = this.passengerFormGroup.get(key);
           if (control) control.setErrors(null);
         });
       }
       this.passengerFormGroup.reset();
-      console.log('passenger', this.passengerFormGroup)
+      console.log('passenger', this.passengerFormGroup);
 
       if (this.busDriverFormGroup && this.busDriverFormGroup.controls) {
-        Object.keys(this.busDriverFormGroup.controls).forEach(key => {
+        Object.keys(this.busDriverFormGroup.controls).forEach((key) => {
           const control = this.busDriverFormGroup.get(key);
           if (control) control.setErrors(null);
         });
@@ -139,6 +149,7 @@ export class RegisterComponent implements OnInit {
   handleSubmitPassengerForm = () => {
     console.log('passenger form submitted', this.passengerFormGroup);
     // basic info
+    const otp = this.passengerFormGroup.get('otp');
     const lastname = this.passengerFormGroup.get('lastname');
     const firstname = this.passengerFormGroup.get('firstname');
     const middlename = this.passengerFormGroup.get('middlename');
@@ -155,23 +166,28 @@ export class RegisterComponent implements OnInit {
 
     // prep request body
     const passengerBody = {
-      Lastname: lastname && lastname.value ? lastname.value : "",
-      Firstname: firstname && firstname.value ? firstname.value : "",
-      Middlename: middlename && middlename.value ? middlename.value : "",
-      Gender: gender && gender.value ? gender.value : "",
-      Birthdate: birthdate && birthdate.value ? birthdate.value : "",
-      ActiveContactNumber: contactNumber && contactNumber.value ? contactNumber.value : "",
-      ActiveEmailAdd: emailAddress && emailAddress.value ? emailAddress.value : "",
-      CurrentAddress: currentAddress && currentAddress.value ? currentAddress.value : "",
-      HomeAddress: homeAddress && homeAddress.value ? homeAddress.value : "",
-      Username: p_username && p_username.value ? p_username.value : "",
-      Password: p_password && p_password.value ? p_password.value : "",
-    }
+      Lastname: lastname && lastname.value ? lastname.value : '',
+      Firstname: firstname && firstname.value ? firstname.value : '',
+      Middlename: middlename && middlename.value ? middlename.value : '',
+      Gender: gender && gender.value ? gender.value : '',
+      Birthdate: birthdate && birthdate.value ? birthdate.value : '',
+      ActiveContactNumber:
+        contactNumber && contactNumber.value ? contactNumber.value : '',
+      ActiveEmailAdd:
+        emailAddress && emailAddress.value ? emailAddress.value : '',
+      CurrentAddress:
+        currentAddress && currentAddress.value ? currentAddress.value : '',
+      HomeAddress: homeAddress && homeAddress.value ? homeAddress.value : '',
+      Username: p_username && p_username.value ? p_username.value : '',
+      Password: p_password && p_password.value ? p_password.value : '',
+    };
 
-    console.log("p payload", passengerBody)
+    console.log('p payload', passengerBody);
 
     // call api service
-    this.passSakayAPIService.addPassenger(passengerBody)
+    if (this.OTPCode === otp?.value) {
+      this.passSakayAPIService
+      .addPassenger(passengerBody)
       .then((response: any) => {
         if (response.error) {
           this.snackBarService.open(response.error.message, 'Got it');
@@ -182,16 +198,22 @@ export class RegisterComponent implements OnInit {
         }
       })
       .catch((err: any) => {
-        console.log("add passenger error", err);
+        console.log('add passenger error', err);
       });
+    } else {
+      this.snackBarService.open(
+        'Incorrect OTP Code.',
+        'Try again'
+      );
+    }
   };
 
   generateQRCode = (data: any) => {
     console.log('generating qr code', data);
     this.qrPassengerData = data;
     this.qrData = JSON.stringify({
-      passenger: data.secret_id
-    })
+      passenger: data.secret_id,
+    });
   };
 
   handleInputErrors = (controlName: string, errName: string) => {
@@ -200,29 +222,39 @@ export class RegisterComponent implements OnInit {
 
   handleBusDriverInputErrors = (controlName: string, errName: string) => {
     return this.busDriverFormGroup.controls[controlName].hasError(errName);
-  }
+  };
 
   saveBusDriver = (body: Object) => {
     // TODO: call api service for saving bus details (endpoint not yet available)
-    this.passSakayAPIService.addBusDriver(body)
+    this.passSakayAPIService
+      .addBusDriver(body)
       .then((response: any) => {
-        if (!response) this.snackBarService.open('Registration failed. Check your network.', 'OK');
+        if (!response)
+          this.snackBarService.open(
+            'Registration failed. Check your network.',
+            'OK'
+          );
         if (response && response._id) {
           this.newBusDriver = response;
           this.snackBarService.open('Registration success.', 'OK');
           // this.busDriverSuccessRegister = true;
           this.category = 'bus-driver-registration-complete';
+          this.sendBusOTPForm = false;
         }
       })
-      .catch(err => {
-        console.error(err)
-        this.snackBarService.open('Registration failed. Check your network.', 'OK')
+      .catch((err) => {
+        console.error(err);
+        this.snackBarService.open(
+          'Registration failed. Check your network.',
+          'OK'
+        );
       });
-  }
+  };
 
   handleSubmitRegistrationBusDriver = async () => {
     console.log(this.busDriverFormGroup);
     // bus basic info
+    const otp = this.busDriverFormGroup.get('otp');
     const busName = this.busDriverFormGroup.get('busName');
     const busNumber = this.busDriverFormGroup.get('busNumber');
     const busProvince = this.busDriverFormGroup.get('busProvince');
@@ -232,39 +264,106 @@ export class RegisterComponent implements OnInit {
     // bus operator info
     const operatorFullName = this.busDriverFormGroup.get('operatorFullName');
     const operatorPosition = this.busDriverFormGroup.get('operatorPosition');
-    const operatorPhoneNumber = this.busDriverFormGroup.get('operatorPhoneNumber');
+    const operatorPhoneNumber = this.busDriverFormGroup.get(
+      'operatorPhoneNumber'
+    );
     const operatorEmail = this.busDriverFormGroup.get('operatorEmail');
 
     // bus basic info request body
     const busBasicInfoBody = {
-      BusName: busName && busName.value ? busName.value : "",
-      BusNumber: busNumber && busNumber.value ? busNumber.value : "",
-      BusProvince: busProvince && busProvince.value ? busProvince.value : "",
-      OperatorFullName: operatorFullName && operatorFullName.value ? operatorFullName.value : "",
-      OperatorPosition: "Conductor",
-      OperatorPhoneNumber: operatorPhoneNumber && operatorPhoneNumber.value ? operatorPhoneNumber.value : "",
-      Username: username && username.value ? username.value : "",
-      Password: password && password.value ? password.value : "",
-      Email: operatorEmail && operatorEmail.value ? operatorEmail.value : "",
+      BusName: busName && busName.value ? busName.value : '',
+      BusNumber: busNumber && busNumber.value ? busNumber.value : '',
+      BusProvince: busProvince && busProvince.value ? busProvince.value : '',
+      OperatorFullName:
+        operatorFullName && operatorFullName.value
+          ? operatorFullName.value
+          : '',
+      OperatorPosition: 'Conductor',
+      OperatorPhoneNumber:
+        operatorPhoneNumber && operatorPhoneNumber.value
+          ? operatorPhoneNumber.value
+          : '',
+      Username: username && username.value ? username.value : '',
+      Password: password && password.value ? password.value : '',
+      Email: operatorEmail && operatorEmail.value ? operatorEmail.value : '',
+    };
+    if (this.OTPCode === otp?.value) {
+      this.saveBusDriver(busBasicInfoBody);
+    } else {
+      this.snackBarService.open(
+        'Incorrect OTP Code.',
+        'Try again'
+      );
     }
-    this.saveBusDriver(busBasicInfoBody);
-  }
+  };
 
   handleDownloadQRCode = () => {
     console.log('qr downloaded!');
   };
 
   numberOnly = (event: any): boolean => {
-    const charCode = (event.which) ? event.which : event.keyCode;
+    const charCode = event.which ? event.which : event.keyCode;
     if (charCode > 31 && (charCode < 48 || charCode > 57)) {
       return false;
     }
     return true;
-  }
+  };
 
   gotoLoginPage = () => {
     this.router.navigate(['/welcome/login']);
+  };
+
+  toggleBusSendOTP = () => {
+    const operatorEmail = this.busDriverFormGroup.get('operatorEmail');
+    const operatorFullName = this.busDriverFormGroup.get('operatorFullName');
+    this.busdriverStepControls = "bus-driver-otp"
+    this.sendBusOTPForm = true;
+    this.OTPEmail = operatorEmail?.value;
+    this.OTPName = operatorFullName?.value;
+    this.sendOTPCode(this.OTPEmail, this.OTPName);
   }
+
+  togglePassengerSendOTP = () => {
+    const emailAddress = this.passengerFormGroup.get('emailAddress');
+    const lastname = this.passengerFormGroup.get('lastname');
+    const firstname = this.passengerFormGroup.get('firstname');
+    this.sendPassengerOTPForm = true;
+    this.OTPEmail = emailAddress?.value;
+    this.OTPName = lastname?.value + " " + firstname?.value;
+    this.sendOTPCode(this.OTPEmail, this.OTPName);
+    this.passengerStepControls = "passenger-otp"
+  }
+
+  makeOTPCode(length: number) {
+    let result = '';
+    const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
+    const charactersLength = characters.length;
+    let counter = 0;
+    while (counter < length) {
+      result += characters.charAt(Math.floor(Math.random() * charactersLength));
+      counter += 1;
+    }
+    return result;
+  }
+
+  sendOTPCode = (email: string, name: string) => {
+    this.OTPCode = this.makeOTPCode(6);
+    console.log(this.OTPCode);
+    if (this.OTPCode) {
+      const body = {
+        email: email,
+        name: name,
+        OTP: this.OTPCode,
+      };
+      this.passSakayAPIService.sendMail(body)
+        .then((data: any) => {
+          console.log(data);
+        })
+        .catch((error: any) => {
+          console.log(error);
+        });
+    }
+  };
 
   ngDoCheck(): void {
     if (this.category === 'passenger' && this.passengerStepControls === '') {
@@ -274,10 +373,18 @@ export class RegisterComponent implements OnInit {
       const gender = this.passengerFormGroup.get('gender');
       const birthdate = this.passengerFormGroup.get('birthdate');
       if (
-        (lastname && lastname.value !== "" && lastname.value !== null) &&
-        (firstname && firstname.value !== "" && firstname.value !== null) &&
-        (gender && gender.value !== "" && gender.value !== null) &&
-        (birthdate && birthdate.value !== "" && birthdate.value !== null)
+        lastname &&
+        lastname.value !== '' &&
+        lastname.value !== null &&
+        firstname &&
+        firstname.value !== '' &&
+        firstname.value !== null &&
+        gender &&
+        gender.value !== '' &&
+        gender.value !== null &&
+        birthdate &&
+        birthdate.value !== '' &&
+        birthdate.value !== null
       ) {
         this.disableBasicInfoNext = false;
       } else {
@@ -285,16 +392,25 @@ export class RegisterComponent implements OnInit {
       }
     }
 
-    if (this.category === 'passenger' && this.passengerStepControls === 'passenger-contact') {
+    if (
+      this.category === 'passenger' &&
+      this.passengerStepControls === 'passenger-contact'
+    ) {
       const contactNumber = this.passengerFormGroup.get('contactNumber');
       const emailAddress = this.passengerFormGroup.get('emailAddress');
       const currentAddress = this.passengerFormGroup.get('currentAddress');
       const homeAddress = this.passengerFormGroup.get('homeAddress');
 
       if (
-        (contactNumber && contactNumber.value !== "" && contactNumber.value !== "") &&
-        (currentAddress && currentAddress.value !== "" && currentAddress.value !== "") &&
-        (homeAddress && homeAddress.value !== "" && homeAddress.value !== "")
+        contactNumber &&
+        contactNumber.value !== '' &&
+        contactNumber.value !== '' &&
+        currentAddress &&
+        currentAddress.value !== '' &&
+        currentAddress.value !== '' &&
+        homeAddress &&
+        homeAddress.value !== '' &&
+        homeAddress.value !== ''
       ) {
         this.disableContactInfoNext = false;
       } else {
@@ -302,24 +418,44 @@ export class RegisterComponent implements OnInit {
       }
     }
 
-    if (this.category === 'passenger' && this.passengerStepControls === 'passenger-account') {
+    if (
+      this.category === 'passenger' &&
+      this.passengerStepControls === 'passenger-account'
+    ) {
       const p_username = this.passengerFormGroup.get('p_username');
       const p_password = this.passengerFormGroup.get('p_password');
-      const p_confirmPassword = this.passengerFormGroup.get('p_confirmPassword');
+      const p_confirmPassword =
+        this.passengerFormGroup.get('p_confirmPassword');
 
       if (
-        (p_username && p_confirmPassword && p_password) && 
-        ( 
-          (p_username.value !== "" && p_username.value !== null) &&
-          (p_confirmPassword.value !== "" && p_confirmPassword.value !== null) &&
-          (p_password.value !== "" && p_password.value !== null)
-        )
+        p_username &&
+        p_confirmPassword &&
+        p_password &&
+        p_username.value !== '' &&
+        p_username.value !== null &&
+        p_confirmPassword.value !== '' &&
+        p_confirmPassword.value !== null &&
+        p_password.value !== '' &&
+        p_password.value !== null
       ) {
         if (p_password.value === p_confirmPassword.value) {
-          this.disableSuccessRegister = false;
+          this.disableAccountInfoNext = false;
         } else {
-          this.disableSuccessRegister = true;
+          this.disableAccountInfoNext = true;
         }
+      } else {
+        this.disableAccountInfoNext = true;
+      }
+    }
+
+    if (this.category === 'passenger' && this.busdriverStepControls === 'passenger-otp') {
+      const otp = this.passengerFormGroup.get('otp');
+
+      if (
+        otp &&
+        otp.value !== ''
+      ) {
+        this.disableSuccessRegister = false;
       } else {
         this.disableSuccessRegister = true;
       }
@@ -331,9 +467,15 @@ export class RegisterComponent implements OnInit {
       const busProvince = this.busDriverFormGroup.get('busProvince');
 
       if (
-        (busName && busName.value !== "" && busName.value !== null) &&
-        (busProvince && busProvince.value !== "" && busProvince.value !== null) &&
-        (busNumber && busNumber.value !== "" && busNumber.value !== null)
+        busName &&
+        busName.value !== '' &&
+        busName.value !== null &&
+        busProvince &&
+        busProvince.value !== '' &&
+        busProvince.value !== null &&
+        busNumber &&
+        busNumber.value !== '' &&
+        busNumber.value !== null
       ) {
         this.disableBusBasicInfoNext = false;
       } else {
@@ -341,16 +483,40 @@ export class RegisterComponent implements OnInit {
       }
     }
 
-    if (this.category === 'bus-driver' && this.busdriverStepControls === 'bus-driver-incharge') {
+    if (this.category === 'bus-driver' && this.busdriverStepControls === 'bus-driver-otp') {
+      const otp = this.busDriverFormGroup.get('otp');
+
+      if (
+        otp &&
+        otp.value !== ''
+      ) {
+        this.busDriverSuccessRegister = false;
+      } else {
+        this.busDriverSuccessRegister = true;
+      }
+    }
+
+    if (
+      this.category === 'bus-driver' &&
+      this.busdriverStepControls === 'bus-driver-incharge'
+    ) {
       const operatorFullName = this.busDriverFormGroup.get('operatorFullName');
       const operatorPosition = this.busDriverFormGroup.get('operatorPosition');
-      const operatorPhoneNumber = this.busDriverFormGroup.get('operatorPhoneNumber');
+      const operatorPhoneNumber = this.busDriverFormGroup.get(
+        'operatorPhoneNumber'
+      );
       const operatorEmail = this.busDriverFormGroup.get('operatorEmail');
 
       if (
-        (operatorFullName && operatorFullName.value !== "" && operatorFullName.value !== null) &&
-        (operatorPhoneNumber && operatorPhoneNumber.value !== "" && operatorPhoneNumber.value !== null) &&
-        (operatorEmail && operatorEmail.value !== "" && operatorEmail.value !== null) 
+        operatorFullName &&
+        operatorFullName.value !== '' &&
+        operatorFullName.value !== null &&
+        operatorPhoneNumber &&
+        operatorPhoneNumber.value !== '' &&
+        operatorPhoneNumber.value !== null &&
+        operatorEmail &&
+        operatorEmail.value !== '' &&
+        operatorEmail.value !== null
       ) {
         this.disableBusOperatorInfoNext = false;
       } else {
@@ -358,13 +524,20 @@ export class RegisterComponent implements OnInit {
       }
     }
 
-    if (this.category === 'bus-driver' && this.busdriverStepControls === 'bus-driver-tempVac') {
+    if (
+      this.category === 'bus-driver' &&
+      this.busdriverStepControls === 'bus-driver-tempVac'
+    ) {
       const temp = this.busDriverFormGroup.get('acceptHighTemp');
       const vaccine = this.busDriverFormGroup.get('acceptNoVaccination');
 
       if (
-        (temp && temp.value !== "" && temp.value !== null) &&
-        (vaccine && vaccine.value !== "" && vaccine.value !== null)
+        temp &&
+        temp.value !== '' &&
+        temp.value !== null &&
+        vaccine &&
+        vaccine.value !== '' &&
+        vaccine.value !== null
       ) {
         this.disableBusOperatorScanOptNext = false;
       } else {
@@ -372,18 +545,24 @@ export class RegisterComponent implements OnInit {
       }
     }
 
-    if (this.category === 'bus-driver' && this.busdriverStepControls === 'bus-driver-account') {
+    if (
+      this.category === 'bus-driver' &&
+      this.busdriverStepControls === 'bus-driver-account'
+    ) {
       const username = this.busDriverFormGroup.get('username');
       const password = this.busDriverFormGroup.get('password');
       const confirmPassword = this.busDriverFormGroup.get('confirmPassword');
 
       if (
-        (username && confirmPassword && password) && 
-        ( 
-          (username.value !== "" && username.value !== null) &&
-          (confirmPassword.value !== "" && confirmPassword.value !== null) &&
-          (password.value !== "" && password.value !== null)
-        )
+        username &&
+        confirmPassword &&
+        password &&
+        username.value !== '' &&
+        username.value !== null &&
+        confirmPassword.value !== '' &&
+        confirmPassword.value !== null &&
+        password.value !== '' &&
+        password.value !== null
       ) {
         if (password.value === confirmPassword.value) {
           this.disableBusAccountInfoNext = false;

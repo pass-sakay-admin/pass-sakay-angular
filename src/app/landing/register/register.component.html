@@ -232,6 +232,39 @@
           <button
             mat-flat-button
             color="primary"
+            (click)="togglePassengerSendOTP()"
+            [disabled]="disableAccountInfoNext"
+          >
+            Verify Email
+          </button>
+        </div>
+      </div>
+      <div [ngClass]="passengerStepControls == 'passenger-otp' ? '' : 'hidden'">
+        <mat-form-field appearance="outline" class="form-input">
+          <mat-label>OTP Code</mat-label>
+          <input matInput formControlName="otp" type="text" value="" />
+        </mat-form-field>
+        <div class="mb-3">
+          <p>*Note: An OTP Code has been sent to your email address. Please check.</p>
+          <button
+            mat-stroked-button
+            color="primary"
+            (click)="sendOTPCode(OTPEmail, OTPName)"
+          >
+            Resend Code
+          </button>
+        </div>
+        <div class="form-wizard-controls">
+          <button
+            mat-stroked-button
+            color="primary"
+            (click)="gotoLoginPage()"
+          >
+            Cancel Registration
+          </button>
+          <button
+            mat-flat-button
+            color="primary"
             (click)="handleSubmitPassengerForm()"
             [disabled]="disableSuccessRegister"
           >
@@ -438,9 +471,44 @@
           <button
             mat-flat-button
             color="primary"
+            (click)="toggleBusSendOTP()"
+            [disabled]="disableBusAccountInfoNext"
+          >
+            Verify Email
+          </button>
+        </div>
+      </div>
+      <div [ngClass]="
+      busdriverStepControls == 'bus-driver-otp' ? '' : 'hidden'
+    ">
+        <mat-form-field appearance="outline" class="form-input">
+          <mat-label>OTP Code</mat-label>
+          <input matInput formControlName="otp" type="text" value="" />
+        </mat-form-field>
+        <div class="mb-3">
+          <p>*Note: An OTP Code has been sent to your email address. Please check.</p>
+          <button
+            mat-stroked-button
+            color="primary"
+            (click)="sendOTPCode(OTPEmail, OTPName)"
+          >
+            Resend Code
+          </button>
+        </div>
+        <div class="form-wizard-controls">
+          <button
+            mat-stroked-button
+            color="primary"
+            (click)="gotoLoginPage()"
+          >
+            Cancel Registration
+          </button>
+          <button
+            mat-flat-button
+            color="primary"
             (click)="handleSubmitRegistrationBusDriver()"
             [disabled]="
-              disableBusOperatorInfoNext ? disableBusOperatorInfoNext : false
+            disableSubmitButton ? disableSubmitButton : false
             "
           >
             Submit

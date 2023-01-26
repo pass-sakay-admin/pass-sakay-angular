@@ -59,13 +59,17 @@ export class PassengerTripHistoryComponent implements OnInit {
             ${passenger.firstname} 
             ${passenger.middlename ? passenger.middlename : ""}
           `;
+          const busDetails = `
+              ${tripHistory.busAccount.busName} - 
+              ${tripHistory.busAccount.busNumber}
+            `;
           this.tripHistoryList.push({
             _id: tripHistory._id,
             Date: moment(tripHistory.date).format('MMM DD YYYY'),
             Time: moment(tripHistory.time).format('HH:mm:ss A'),
             rowId: index + 1,
             PassengerName: fullname,
-            BusName: `${tripHistory.busAccount.busName}`,
+            BusName: busDetails,
             ScanType: tripHistory.tripType,
             Temperature: tripHistory.temperature || "N/A",
             SeatNumber: tripHistory.seatNumber || "N/A",

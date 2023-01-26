@@ -422,4 +422,22 @@ export class PassSakayCollectionService {
       .post(endpoint, body, { headers: headers })
       .pipe(map((data: Object) => data));
   }
+
+  public sendMail(body: any): Promise<any> {
+    return new Promise<any>((resolve: any, reject: any) => {
+      this.apisendMail(body).subscribe((data: Object) => {
+        resolve(data);
+      }),
+      (err: any): void => {
+        reject(err);
+      };
+    });
+  }
+  private apisendMail(body: any): Observable<any> {
+    const headers: HttpHeaders = new HttpHeaders(this.httpHeaders);
+    const endpoint = environment.api_base_url + '/auth/test-mail';
+    return this.httpClientNoInterceptor
+      .post(endpoint, body, { headers: headers })
+      .pipe(map((data: Object) => data));
+  }
 }
