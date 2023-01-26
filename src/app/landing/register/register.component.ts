@@ -448,7 +448,7 @@ export class RegisterComponent implements OnInit {
       }
     }
 
-    if (this.category === 'passenger' && this.busdriverStepControls === 'passenger-otp') {
+    if (this.category === 'passenger' && this.passengerStepControls === 'passenger-otp') {
       const otp = this.passengerFormGroup.get('otp');
 
       if (
