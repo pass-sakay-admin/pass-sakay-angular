@@ -10,7 +10,8 @@ export const environment = {
   USER_ROLE: {
     Passenger: "passenger",
     BusDriver: "bus-driver",
-    Admin: "admin"
+    Admin: "admin",
+    DOH: "doh"
   }
 };
 

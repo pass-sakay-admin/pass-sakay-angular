@@ -23,11 +23,11 @@ interface IReportBody {
 }
 
 @Component({
-  selector: 'app-contact-tracing',
-  templateUrl: './contact-tracing.component.html',
-  styleUrls: ['./contact-tracing.component.scss'],
+  selector: 'app-admin-reports',
+  templateUrl: './admin-reports.component.html',
+  styleUrls: ['./admin-reports.component.scss'],
 })
-export class ContactTracingComponent implements OnInit {
+export class AdminReportsComponent implements OnInit {
   @ViewChild('typeAheadInstance', { static: true })
   typeAheadInstance!: NgbTypeahead;
   public focus$ = new Subject<string>();
@@ -35,30 +35,15 @@ export class ContactTracingComponent implements OnInit {
   public model!: NgbDateStruct;
   @ViewChild('content') content!: ElementRef;
   public breakpoint: number = 0;
-  public isFormIncomplete: boolean = true;
 
   public tripHistoryList: Array<any> = [];
-  public contactTracingForm!: FormGroup;
+  public generateReportForm!: FormGroup;
 
   public toggleDatePicker: Boolean = true;
   public minDate: any;
   public maxDate: any;
 
-  public passengerList: Array<any> = [];
-  public statusList: Array<any> = [
-    { text: "New Case", value: "New Case" },
-    { text: "Hospital Quarantined", value: "Hospital Quarantined" },
-    { text: "Home Quarantined", value: "Home Quarantined" },
-    { text: "Recovered", value: "Recovered" },
-    { text: "Deceased", value: "Deceased" },
-  ];
-  public progressList: Array<any> = [
-    { text: "Passenger successfully added to positive list.", status: "success" },
-    { text: "Tracked trip history 5 days prior to the date tagged as positive", status: "success" },
-    { text: "Collecting exposed passengers...", status: "warning" },
-    { text: "Failed to save exposed passengers to close contact list", status: "danger" },
-    { text: "Failed to send emails to passengers exposed.", status: "muted" },
-  ];
+  public busProfileData: Array<any> = [];
 
   public pdfBody: Array<any> = [];
   public pdfHeaders: Array<any> = [];
@@ -71,31 +56,32 @@ export class ContactTracingComponent implements OnInit {
   ) {}
 
   ngOnInit() {
-    this.getAllPassengers();
+    this.getAllBusProfile();
     this.initGenerateReportForm();
   }
 
   initGenerateReportForm = () => {
-    this.contactTracingForm = new FormGroup({
+    this.generateReportForm = new FormGroup({
+      busAccount: new FormControl("", Validators.required),
       passengerAccount: new FormControl('', Validators.required),
-      dateTaggedAsPositive: new FormControl('', Validators.required),
-      status: new FormControl('', Validators.required),
+      scanType: new FormControl('', Validators.required),
+      dateFrom: new FormControl('', Validators.required),
+      dateTo: new FormControl('', Validators.required),
+      today: new FormControl('', Validators.required),
     });
   };
 
-  getAllPassengers = () => {
+  getAllBusProfile = () => {
     this.passSakayAPIService
-      .getAllPassengerData()
+      .getAllBusAccountData()
       .then((response: any) => {
         if (response.error) {
           console.log(response);
         }
         if (!response.error) {
-          response.forEach((data: any) => {
-            this.passengerList.push({
-              text: data.firstname + " " + data.middlename + " " + data.lastname,
-              value: data._id
-            });
+          this.busProfileData.push({
+            text: response.busName,
+            value: response._id
           });
         }
       })
@@ -144,9 +130,9 @@ export class ContactTracingComponent implements OnInit {
   };
 
   onChangeJustToday = () => {
-    const today = this.contactTracingForm.get('today');
-    const dateFrom = this.contactTracingForm.get('dateFrom');
-    const dateTo = this.contactTracingForm.get('dateTo');
+    const today = this.generateReportForm.get('today');
+    const dateFrom = this.generateReportForm.get('dateFrom');
+    const dateTo = this.generateReportForm.get('dateTo');
     console.log(today?.value);
 
     if (today?.value) {
@@ -172,13 +158,13 @@ export class ContactTracingComponent implements OnInit {
   };
 
   setMaxDate = () => {
-    const dateTo = this.contactTracingForm.get('dateTo');
+    const dateTo = this.generateReportForm.get('dateTo');
     this.maxDate = this.setDateObject(dateTo?.value);
     console.log('setMax', this.setDateObject(dateTo?.value));
   };
 
   setMinDate = () => {
-    const dateFrom = this.contactTracingForm.get('dateFrom');
+    const dateFrom = this.generateReportForm.get('dateFrom');
     this.minDate = this.setDateObject(dateFrom?.value);
     console.log('setMin', this.setDateObject(dateFrom?.value));
   };
@@ -210,107 +196,21 @@ export class ContactTracingComponent implements OnInit {
   // }
 
   getFormValues = (): IReportBody => {
-    const busAccount = this.contactTracingForm.get('busAccount');
-    const passengerAccount = this.contactTracingForm.get('passengerAccount');
-    const dateFrom = this.contactTracingForm.get('dateFrom');
-    const dateTo = this.contactTracingForm.get('dateTo');
-    const today = this.contactTracingForm.get('today');
+    const busAccount = this.generateReportForm.get('busAccount');
+    const passengerAccount = this.generateReportForm.get('passengerAccount');
+    const dateFrom = this.generateReportForm.get('dateFrom');
+    const dateTo = this.generateReportForm.get('dateTo');
+    const today = this.generateReportForm.get('today');
 
     const payload: any = {};
-    Object.keys(this.contactTracingForm.controls).forEach(key => {
-      if (this.contactTracingForm.controls[key].value) {
-        payload[key] = this.contactTracingForm.controls[key].value;
+    Object.keys(this.generateReportForm.controls).forEach(key => {
+      if (this.generateReportForm.controls[key].value) {
+        payload[key] = this.generateReportForm.controls[key].value;
       }
     });
     console.log(payload);
     return payload;
   };
-
-  onClearForm = () => {
-    Object.keys(this.contactTracingForm.controls).forEach(key => {
-      const control = this.contactTracingForm.get(key);
-      if (control) {
-        control.setErrors(null);
-        control.setValue(null);
-      }
-    });
-    this.contactTracingForm.markAsPristine();
-    this.contactTracingForm.markAsUntouched();
-  }
-
-  onTraceCloseContacts = () => {
-    const passengerAccount = this.contactTracingForm.get('passengerAccount');
-    const dateTaggedAsPositive = this.contactTracingForm.get('dateTaggedAsPositive');
-    const status = this.contactTracingForm.get('status');
-
-    const body = {
-      passengerAccount: passengerAccount?.value,
-      dateFrom: moment(dateTaggedAsPositive?.value),
-      status: status?.value
-    }
-    console.log(body);
-
-    this.passSakayAPIService.saveNewPositiveCase(body)
-      .then((data: any) => {
-        console.log(data);
-        if (data.status) {
-          this.isFormIncomplete = true;
-          console.log(data.newPositiveCase._id);
-        }
-      })
-      .catch((error: any) => {
-        console.error(error);
-      });
-  }
-
-  checkTripHistory = () => {
-    const passengerAccount = this.contactTracingForm.get('passengerAccount');
-    const dateTaggedAsPositive = this.contactTracingForm.get('dateTaggedAsPositive');
-    const status = this.contactTracingForm.get('status');
-    const body = {
-      passengerAccount: passengerAccount?.value,
-      dateFrom: moment(dateTaggedAsPositive?.value).subtract(5,'days'),
-      dateTo: moment(dateTaggedAsPositive?.value)
-    }
-    console.log(body)
-
-    if (body.passengerAccount) {
-      this.passSakayAPIService.getTripHistoryOfPositive(body)
-      .then((data: any) => {
-        console.log(data)
-        if (data.length != 0) {
-          data.forEach((tripHistory: any, index: any) => {
-            const busDetails = `
-              ${tripHistory.busAccount.busName} (
-                ${tripHistory.busAccount.busNumber}
-              )
-            `;
-            this.tripHistoryList.push({
-              rowId: index + 1,
-              Date: moment(tripHistory.date).format('MMM DD YYYY'),
-              Time: moment(tripHistory.time).format('HH:mm:ss A'),
-              BusName: busDetails,
-              ScanType: tripHistory.tripType,
-              Temperature: tripHistory.temperature || "N/A",
-              SeatNumber: tripHistory.seatNumber || "N/A",
-              VaccineCode: tripHistory.vaccineCode || "N/A",
-              TripSched: `
-                ${tripHistory.tripSched.name} 
-                (${tripHistory.tripSched.startTime} - ${tripHistory.tripSched.endTime})
-              `,
-              PlaceOfPickUp: `
-                ${tripHistory.landmark} - 
-                ${tripHistory.tripPlaceOfScan}
-              `,
-            });
-          });
-        }
-      })
-      .catch((error: any) => {
-        console.error(error);
-      });
-    }
-  }
 
   // save = (): void => {
   //   let content = this.content.nativeElement;
@@ -401,22 +301,9 @@ export class ContactTracingComponent implements OnInit {
 
   generateHeaderFooterTable = () => {
     const fileTitle = ``;
-    console.log(this.contactTracingForm);
+    console.log(this.generateReportForm);
     // this.generatePDFReport();
   };
 
-  ngDoCheck(): void {
-    let isInputNull: number = 0;
-    Object.keys(this.contactTracingForm.controls).forEach((key: string) => {
-      const controlValue = this.contactTracingForm.controls[key];
-      if (!controlValue.value) {
-        isInputNull++;
-      }
-    });
-    if (isInputNull) {
-      this.isFormIncomplete = true;
-    } else {
-      this.isFormIncomplete = false;
-    }
-  }
+  ngDoCheck(): void {}
 }

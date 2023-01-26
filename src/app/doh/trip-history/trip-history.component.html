@@ -1,15 +1,21 @@
 <div class="passenger-page container">
-  <div class="row pt-5">
+  <div class="row pt-4">
     <div class="passenger-page-title col col-12">
       <div class="d-flex flex-row justify-content-between align-items-center">
         <h1 class="m-0 p-0">Trip History</h1>
-        <button class="m-0 p-0" mat-fab color="warn" aria-label="Edit Profile">
+        <button
+          class="m-0 p-0 bg-success"
+          mat-fab
+          color="warn"
+          (click)="openPDF()"
+          aria-label="Edit Profile"
+        >
           <mat-icon>save_alt</mat-icon>
         </button>
       </div>
     </div>
   </div>
-  <div class="row pt-5">
+  <div class="row pt-5" id="htmlData">
     <!-- table -->
     <div class="col col-12">
       <!-- handleFilterTripHistory("All") -->
@@ -39,11 +45,15 @@
     </div>
     <div class="col col-12">
       <div class="table-responsive table-responsive-sm">
-        <table class="table table-hover">
+        <table class="table table-hover" id="content" #content>
+          <caption>
+            <!-- Showing 10 of {{ 45 }} trip records, export to view them all. -->
+          </caption>
           <thead>
             <tr>
               <th scope="col">#</th>
-              <th scope="col">Bus</th>
+              <th scope="col">Passenger Name</th>
+              <th scope="col">Bus Name</th>
               <th scope="col">Scan Type</th>
               <th scope="col">Trip Sched</th>
               <th scope="col">Pickup / Dropoff Place</th>
@@ -62,6 +72,7 @@
             </tr>
               <tr *ngFor="let tripHistory of tripHistoryList">
                 <th scope="row">{{ tripHistory.rowId }}</th>
+                <td>{{ tripHistory.PassengerName }}</td>
                 <td>{{ tripHistory.BusName }}</td>
                 <td>
                   <span *ngIf="tripHistory.ScanType === 'scan-in'">Scan In</span>

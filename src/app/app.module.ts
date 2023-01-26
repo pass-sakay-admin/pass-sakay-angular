@@ -12,6 +12,7 @@ import { LandingModule } from './landing/landing.module';
 import { BusDriverModule } from './bus-driver/bus-driver.module';
 import { PassengerModule } from './passenger/passenger.module';
 import { AdminModule } from './admin/admin.module';
+import { DOHModule } from './doh/doh.module';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 @NgModule({
   declarations: [AppComponent],
@@ -24,7 +25,8 @@ import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
     LandingModule,
     BusDriverModule,
     PassengerModule,
-    AdminModule
+    AdminModule,
+    DOHModule,
   ],
   providers: [
     {

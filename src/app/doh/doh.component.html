@@ -1,0 +1,106 @@
+<div class="d-flex" id="wrapper">
+  <!-- Sidebar-->
+  <div
+    class="border-end bg-white"
+    id="sidebar-wrapper"
+    [ngClass]="sideNavOpened ? 'show' : 'hide'"
+  >
+    <div class="sidebar-heading border-bottom app-text-logo">
+      <span class="pass">Pass</span><span class="sakay">Sakay</span>
+      <span class="admin">DOH Account</span>
+    </div>
+    <div class="list-group list-group-flush">
+      <a
+        class="list-group-item list-group-item-action list-group-item-light p-3"
+        [routerLink]="['/doh/dashboard']"
+        routerLinkActive="active"
+        >Dashboard</a
+      >
+      <a
+        class="list-group-item list-group-item-action list-group-item-light p-3"
+        [routerLink]="['/doh/contact-tracing']"
+        routerLinkActive="active"
+        >Contact Tracing</a
+      >
+      <a
+        class="list-group-item list-group-item-action list-group-item-light p-3"
+        [routerLink]="['/doh/trip-schedules']"
+        routerLinkActive="active"
+        >Trip Schedules</a
+      >
+      <a
+        class="list-group-item list-group-item-action list-group-item-light p-3"
+        [routerLink]="['/doh/reports']"
+        routerLinkActive="active"
+        >Reports</a
+      >
+    </div>
+  </div>
+  <!-- Page content wrapper-->
+  <div id="page-content-wrapper">
+    <!-- Top navigation-->
+    <nav class="navbar navbar-expand navbar-light bg-light border-bottom shadow">
+      <div class="container-fluid">
+        <button
+          class="navbar-brand"
+          mat-mini-fab
+          color="primary"
+          aria-label="Toggle Sidebar"
+          (click)="sideNavToggler()"
+        >
+          <mat-icon>{{
+            sideNavOpened ? "arrow_back" : "arrow_forward"
+          }}</mat-icon>
+        </button>
+        <button
+          class="navbar-toggler"
+          type="button"
+          data-bs-toggle="collapse"
+          data-bs-target="#busDriverNavbar"
+          aria-controls="busDriverNavbar"
+          aria-expanded="false"
+          aria-label="Toggle navigation"
+        >
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="busDriverNavbar">
+          <ul class="navbar-nav ms-auto">
+            <li class="nav-item dropdown">
+              <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                <strong>{{ userData.email }}&nbsp;&nbsp;&nbsp;</strong>
+              </a>
+              <div
+                class="dropdown-menu dropdown-menu-end"
+                aria-labelledby="navbarDropdown"
+              >
+                <a
+                  class="dropdown-item"
+                  [routerLink]="['/admin/profile']"
+                  routerLinkActive="active"
+                  >User Profile</a
+                >
+                <a
+                  class="dropdown-item"
+                  [routerLink]="['/admin/change-password']"
+                  routerLinkActive="active"
+                  >Change Password</a
+                >
+                <div class="dropdown-divider"></div>
+                <a
+                  class="dropdown-item"
+                  [routerLink]="['/admin/logout']"
+                  routerLinkActive="active"
+                  >Logout</a
+                >
+              </div>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </nav>
+    <!-- Page content-->
+    <div class="container-fluid pt-4">
+      <router-outlet></router-outlet>
+    </div>
+  </div>
+</div>

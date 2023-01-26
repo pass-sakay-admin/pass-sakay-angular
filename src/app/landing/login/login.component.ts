@@ -80,6 +80,11 @@ export class LoginComponent implements OnInit {
           this.openSnackBar("Logged in as Admin", "OK");
         });
         break;
+      case environment.USER_ROLE.DOH:
+        this.route.navigate(['/doh/dashboard']).then(() => {
+          this.openSnackBar("Logged in as DOH Personnel", "OK");
+        });
+        break;
       default:
         if (this.loginFormGroup && this.loginFormGroup.controls) {
           Object.keys(this.loginFormGroup.controls).forEach(key => {

@@ -154,6 +154,8 @@ export class QrScannerComponent implements OnInit {
               control.setValue("");
             }
           });
+          this.tripDetailsFormGroup.markAsPristine();
+          this.tripDetailsFormGroup.markAsUntouched();
         }
       })
       .catch((err: any) => {
@@ -205,8 +207,9 @@ export class QrScannerComponent implements OnInit {
         });
       })
       .catch((error: any) => {
+        console.error(error)
         this.snackBarService.open(
-          'Failed to load passenger data. Check your internet connection.',
+          'Something went wrong. Failed to load trip schedule list.',
           'Got it'
         );
       });
