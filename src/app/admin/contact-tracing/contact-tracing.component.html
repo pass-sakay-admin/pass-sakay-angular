@@ -10,7 +10,7 @@
     </div>
   </div>
   <div class="row pt-5">
-    <mat-stepper headerPosition="top" labelPosition="bottom" #stepper>
+    <mat-stepper headerPosition="top" linear labelPosition="bottom" #stepper>
       <mat-step [stepControl]="contactTracingForm" [optional]="false">
         <ng-template matStepLabel>Add New Positive Case</ng-template>
         <div class="row">
@@ -115,8 +115,11 @@
                 Retrieve trip history
               </button>
             </div>
+            <div class="row" *ngIf="tripHistoryList.length === 0">
+              <p class="text-muted">No data retrieved yet.</p>
+            </div>
           </div>
-          <div class="col col-12">
+          <div class="col col-12" *ngIf="tripHistoryList.length !== 0">
             <div class="table-responsive table-responsive-sm">
               <table class="table table-hover" id="content" #content>
                 <caption>
@@ -137,14 +140,6 @@
                   </tr>
                 </thead>
                 <tbody>
-                  <tr *ngIf="tripHistoryList.length === 0">
-                    <td
-                      colspan="10"
-                      class="text-center text-muted bg-light py-4"
-                    >
-                      No data retrieved.
-                    </td>
-                  </tr>
                   <tr *ngFor="let tripHistory of tripHistoryList">
                     <th scope="row">{{ tripHistory.rowId }}</th>
                     <td>{{ tripHistory.BusName }}</td>
@@ -184,7 +179,115 @@
                 class="order-2"
                 mat-flat-button
                 color="primary"
-                (click)="onTraceCloseContacts()"
+                [disabled]="isFormIncomplete"
+                matStepperNext
+              >
+                Next
+              </button>
+            </div>
+          </div>
+        </div>
+      </mat-step>
+      <mat-step [optional]="false">
+        <ng-template matStepLabel>Collect Close Contacts</ng-template>
+        <div class="row">
+          <div class="col col-12 col-sm-12 col-md-6 col-lg-6 col-xl-6">
+            <p>
+              *Note: The system collects close contact of the passenger tagged
+              as positive based on each trip history retrieved.
+            </p>
+            <div class="d-flex flex-row gap-3 pb-5">
+              <button
+                class=""
+                mat-flat-button
+                color="primary"
+                (click)="checkCloseContacts()"
+              >
+                Retrieve close contacts
+              </button>
+            </div>
+          </div>
+          <div class="close-contacts-list-view col col-12">
+            <div class="row" *ngIf="closeContacts.length == 0">
+              <p class="text-muted">No data retrieved yet.</p>
+            </div>
+            <div
+              class="row mb-2"
+              *ngFor="let closeContactItem of closeContacts"
+            >
+              <div
+                class="tripHistory col col-12 col-sm-12 col-md-4 col-lg-4 col-xl-4"
+              >
+                <strong>TRIP HISTORY</strong>
+                <dl>
+                  <dt>Date</dt>
+                  <dd>{{ closeContactItem.Date }}</dd>
+                  <dt>Trip Schedule</dt>
+                  <dd>{{ closeContactItem.TripSched }}</dd>
+                  <dt>Bus Onboarded</dt>
+                  <dd>{{ closeContactItem.Bus }}</dd>
+                </dl>
+              </div>
+              <div
+                class="closeContacts col col-12 col-sm-12 col-md-8 col-lg-8 col-xl-8"
+              >
+                <strong>CLOSE CONTACTS</strong>
+                <div class="table-responsive table-responsive-sm">
+                  <table class="table table-hover" id="content" #content>
+                    <caption>
+                      <!-- Showing 10 of {{ 45 }} trip records, export to view them all. -->
+                    </caption>
+                    <thead>
+                      <tr>
+                        <th scope="col">Seat #</th>
+                        <th scope="col">Boarding Type</th>
+                        <th scope="col">Name</th>
+                        <th scope="col">Address</th>
+                        <th scope="col">Phone Number</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr *ngIf="closeContactItem.CloseContacts.length === 0">
+                        <td
+                          colspan="5"
+                          class="text-center text-muted bg-light py-4"
+                        >
+                          No data retrieved.
+                        </td>
+                      </tr>
+                      <tr
+                        *ngFor="
+                          let closeContact of closeContactItem.CloseContacts
+                        "
+                      >
+                        <th scope="row">{{ closeContact.SeatNumber }}</th>
+                        <td>{{ closeContact.BoardingType }}</td>
+                        <td>{{ closeContact.Passenger }}</td>
+                        <td>{{ closeContact.Address }}</td>
+                        <td>{{ closeContact.PhoneNumber }}</td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col col-12 col-sm-12 col-md-6 col-lg-6 col-xl-6">
+            <div class="d-flex flex-row justify-content-end gap-3">
+              <button
+                class="order-2"
+                mat-stroked-button
+                color="primary"
+                matStepperPrevious
+              >
+                Back
+              </button>
+              <button
+                class="order-2"
+                mat-flat-button
+                color="primary"
                 [disabled]="isFormIncomplete"
                 matStepperNext
               >
@@ -196,10 +299,24 @@
       </mat-step>
       <mat-step [optional]="false">
         <ng-template matStepLabel>Done</ng-template>
-        You are now done.
-        <div>
-          <button mat-button matStepperPrevious>Back</button>
-          <button mat-button (click)="stepper.reset()">Reset</button>
+        <div class="row pb-5 pt-3">
+          <div class="col col-12 col-sm-12 col-md-6 col-lg-6 col-xl-6">
+            <p class="fw-bold">
+              You are now done on the contact tracing process. Thank you.
+            </p>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col col-12 col-sm-12 col-md-6 col-lg-6 col-xl-6">
+            <div class="d-flex flex-row justify-content-end gap-3">
+              <button mat-stroked-button color="primary" matStepperPrevious>
+                Back
+              </button>
+              <button mat-flat-button color="primary" (click)="stepper.reset()">
+                Reset
+              </button>
+            </div>
+          </div>
         </div>
       </mat-step>
     </mat-stepper>

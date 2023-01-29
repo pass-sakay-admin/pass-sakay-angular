@@ -423,6 +423,24 @@ export class PassSakayCollectionService {
       .pipe(map((data: Object) => data));
   }
 
+  public getCloseContacts(body: any): Promise<any> {
+    return new Promise<any>((resolve: any, reject: any) => {
+      this.apiGetCloseContacts(body).subscribe((data: Object) => {
+        resolve(data);
+      }),
+      (err: any): void => {
+        reject(err);
+      };
+    });
+  }
+  private apiGetCloseContacts(body: any): Observable<any> {
+    const headers: HttpHeaders = new HttpHeaders(this.httpHeaders);
+    const endpoint = environment.api_base_url + 'scanned-qr/get/close-contacts';
+    return this.httpClientNoInterceptor
+      .post(endpoint, body, { headers: headers })
+      .pipe(map((data: Object) => data));
+  }
+
   public sendMail(body: any): Promise<any> {
     return new Promise<any>((resolve: any, reject: any) => {
       this.apisendMail(body).subscribe((data: Object) => {
