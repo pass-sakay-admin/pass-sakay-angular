@@ -16,7 +16,7 @@
   <div class="form-header">
     <h4 *ngIf="category == ''">Register an Account</h4>
     <h4 *ngIf="category == 'passenger'">Register as Passenger</h4>
-    <h4 *ngIf="category == 'bus-driver'">Register Bus Account</h4>
+    <h4 *ngIf="category == 'bus-driver'">Register Conductor Account</h4>
     <h4
       *ngIf="
         category == 'pass-registration-complete' ||
@@ -42,7 +42,7 @@
       mat-flat-button
       color="primary"
     >
-      Bus Account
+      Conductor Account
     </button>
     <div class="form-footer">
       <p>Already have an account? <a href="welcome/login">Login Now</a></p>
