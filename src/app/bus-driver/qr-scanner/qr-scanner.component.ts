@@ -33,28 +33,67 @@ export class QrScannerComponent implements OnInit {
   public hasPermission!: boolean;
   public scannerEnabled: boolean = false;
 
-  public tripScheduleList: Array<any> = []
+  public tripScheduleList: Array<any> = [];
 
   public parsedCityList: Array<Object | any> = [];
   public left: Array<any> = [
-    'A','B','C','D','E','F',
-    'G','H','I','J','K','L',
-    'M','N','O','P','Q','R',
-    'S','T','U','V','W','X',
-    'Y','Z'
+    'A',
+    'B',
+    'C',
+    'D',
+    'E',
+    'F',
+    'G',
+    'H',
+    'I',
+    'J',
+    'K',
+    'L',
+    'M',
+    'N',
+    'O',
+    'P',
+    'Q',
+    'R',
+    'S',
+    'T',
+    'U',
+    'V',
+    'W',
+    'X',
+    'Y',
+    'Z',
   ];
   public right: Array<any> = [
-    'A','B','C','D','E','F',
-    'G','H','I','J','K','L',
-    'M','N','O','P','Q','R',
-    'S','T','U','V','W','X',
-    'Y','Z'
+    'A',
+    'B',
+    'C',
+    'D',
+    'E',
+    'F',
+    'G',
+    'H',
+    'I',
+    'J',
+    'K',
+    'L',
+    'M',
+    'N',
+    'O',
+    'P',
+    'Q',
+    'R',
+    'S',
+    'T',
+    'U',
+    'V',
+    'W',
+    'X',
+    'Y',
+    'Z',
   ];
-  public back: Array<any> = [
-    'B1','B2','B3','B4','B5','B6'
-  ];
-  public selectedSeatNumber: string = "";
-
+  public back: Array<any> = ['B1', 'B2', 'B3', 'B4', 'B5', 'B6'];
+  public selectedSeatNumber: string = '';
 
   constructor(
     private cd: ChangeDetectorRef,
@@ -67,13 +106,13 @@ export class QrScannerComponent implements OnInit {
   ngOnInit(): void {
     this.initCityList();
     this.initTripDetailsFormGroup();
-    this.getAllTripSchedules()
+    this.getAllTripSchedules();
     // this.stopScaning();
   }
 
   openScrollableContent(longContent: any) {
-		this.modalService.open(longContent, { scrollable: true });
-	}
+    this.modalService.open(longContent, { scrollable: true });
+  }
 
   initTripDetailsFormGroup = () => {
     this.tripDetailsFormGroup = new FormGroup({
@@ -85,7 +124,7 @@ export class QrScannerComponent implements OnInit {
       seatNumber: new FormControl(''),
       landmark: new FormControl(''),
     });
-    this.tripDetailsFormGroup.patchValue({tripAction: 'scan-in'});
+    this.tripDetailsFormGroup.patchValue({ tripAction: 'scan-in' });
   };
 
   initCityList(): void {
@@ -105,11 +144,8 @@ export class QrScannerComponent implements OnInit {
 
   onCodeResult(resultString: any) {
     this.scannerEnabled = false;
-    const passengerData = JSON.parse(resultString)
-    if (
-      !passengerData &&
-      !passengerData.passenger
-    ) {
+    const passengerData = JSON.parse(resultString);
+    if (!passengerData && !passengerData.passenger) {
       this.openSnackBar('Invalid QR Code.', 'Got it');
       this.cd.markForCheck();
     } else {
@@ -122,46 +158,101 @@ export class QrScannerComponent implements OnInit {
       const tripPlaceOfScan = this.tripDetailsFormGroup.get('tripPlaceOfScan');
       const busAccount = this.busAccount.userData._userId;
 
-      let body: Object = {
-        passengerAccount: passengerData.passenger || null,
-        tripType: tripType?.value || null,
-        busAccount: busAccount || null,
-        tripSched: tripSched?.value || null,
-        temperature: temperature?.value || null,
-        vaccineCode: vaccineCode?.value || null,
-        landmark: landmark?.value || null,
-        seatNumber: seatNumber?.value || null,
-        tripPlaceOfScan: tripPlaceOfScan?.value || null,
-        date: Date.now(),
-        time: Date.now(),
-      };
+      if (tripType?.value === 'scan-in') {
+        let body: Object = {
+          passengerAccount: passengerData.passenger || null,
+          tripType: tripType?.value || null,
+          busAccount: busAccount || null,
+          tripSched: tripSched?.value || null,
+          temperature: temperature?.value || null,
+          vaccineCode: vaccineCode?.value || null,
+          landmark: landmark?.value || null,
+          seatNumber: seatNumber?.value || null,
+          tripPlaceOfScan: tripPlaceOfScan?.value || null,
+          date: Date.now(),
+          timeIn: Date.now(),
+        };
 
-      console.log(body)
-      this.passSakayAPIService.saveScannedPassengerData(body)
-      .then((response: any) => {
-        if (response) {
-          this.snackBarService.open(
-            'Successfully Scanned QR.',
-            'Got it'
-          );
-          console.log(response)
-          this.cd.markForCheck();
-          this.isFormIncomplete = true;
-          Object.keys(this.tripDetailsFormGroup.controls).forEach(key => {
-            const control = this.tripDetailsFormGroup.get(key);
-            if (control) {
-              control.setErrors(null);
-              control.setValue("");
+        console.log(body);
+        this.passSakayAPIService
+          .postTimeIn(body)
+          .then((response: any) => {
+            if (response) {
+              this.snackBarService.open('Successfully Scanned QR.', 'Got it');
+              console.log(response);
+              this.cd.markForCheck();
+              this.isFormIncomplete = true;
+              Object.keys(this.tripDetailsFormGroup.controls).forEach((key) => {
+                const control = this.tripDetailsFormGroup.get(key);
+                if (control) {
+                  control.setErrors(null);
+                  control.setValue('');
+                }
+              });
+              this.tripDetailsFormGroup.markAsPristine();
+              this.tripDetailsFormGroup.markAsUntouched();
             }
+          })
+          .catch((err: any) => {
+            console.log('add passenger error', err);
+            this.cd.markForCheck();
+            this.isFormIncomplete = true;
+              Object.keys(this.tripDetailsFormGroup.controls).forEach((key) => {
+                const control = this.tripDetailsFormGroup.get(key);
+                if (control) {
+                  control.setErrors(null);
+                  control.setValue('');
+                }
+              });
+              this.tripDetailsFormGroup.markAsPristine();
+              this.tripDetailsFormGroup.markAsUntouched();
           });
-          this.tripDetailsFormGroup.markAsPristine();
-          this.tripDetailsFormGroup.markAsUntouched();
-        }
-      })
-      .catch((err: any) => {
-        console.log('add passenger error', err);
-        this.cd.markForCheck();
-      });
+      } else {
+        let body: Object = {
+          passengerAccount: passengerData.passenger || null,
+          busAccount: busAccount || null,
+          tripSched: tripSched?.value || null,
+          landmarkOut: landmark?.value || null,
+          tripPlaceOfScanOut: tripPlaceOfScan?.value || null,
+          date: Date.now(),
+          timeOut: Date.now(),
+        };
+
+        console.log(body);
+        this.passSakayAPIService
+          .postTimeOut(body)
+          .then((response: any) => {
+            if (response) {
+              this.snackBarService.open('Successfully Scanned QR.', 'Got it');
+              console.log(response);
+              this.cd.markForCheck();
+              this.isFormIncomplete = true;
+              Object.keys(this.tripDetailsFormGroup.controls).forEach((key) => {
+                const control = this.tripDetailsFormGroup.get(key);
+                if (control) {
+                  control.setErrors(null);
+                  control.setValue('');
+                }
+              });
+              this.tripDetailsFormGroup.markAsPristine();
+              this.tripDetailsFormGroup.markAsUntouched();
+            }
+          })
+          .catch((err: any) => {
+            console.log('add passenger error', err);
+            this.cd.markForCheck();
+            this.isFormIncomplete = true;
+              Object.keys(this.tripDetailsFormGroup.controls).forEach((key) => {
+                const control = this.tripDetailsFormGroup.get(key);
+                if (control) {
+                  control.setErrors(null);
+                  control.setValue('');
+                }
+              });
+              this.tripDetailsFormGroup.markAsPristine();
+              this.tripDetailsFormGroup.markAsUntouched();
+          });
+      }
     }
   }
 
@@ -207,7 +298,7 @@ export class QrScannerComponent implements OnInit {
         });
       })
       .catch((error: any) => {
-        console.error(error)
+        console.error(error);
         this.snackBarService.open(
           'Something went wrong. Failed to load trip schedule list.',
           'Got it'
@@ -237,7 +328,7 @@ export class QrScannerComponent implements OnInit {
 
   enableScanning = () => {
     this.scannerEnabled = !this.scannerEnabled;
-  }
+  };
 
   ngDoCheck(): void {
     let isInputNull: number = 0;
@@ -248,20 +339,16 @@ export class QrScannerComponent implements OnInit {
     const seatNumber = this.tripDetailsFormGroup.get('seatNumber');
     const landmark = this.tripDetailsFormGroup.get('landmark');
     const vaccineCode = this.tripDetailsFormGroup.get('vaccineCode');
-    if (tripAction?.value === "scan-in") {
+    if (tripAction?.value === 'scan-in') {
       this.isHiddenInput = false;
     } else {
       this.isHiddenInput = true;
     }
-    
-    if (
-      !tripPlaceOfScan?.value ||
-      !tripAction?.value ||
-      !tripSched?.value
-    ) {
+
+    if (!tripPlaceOfScan?.value || !tripAction?.value || !tripSched?.value) {
       this.isFormIncomplete = true;
     } else {
-      if (tripAction?.value === "scan-in") {
+      if (tripAction?.value === 'scan-in') {
         if (
           !tripPlaceOfScan?.value ||
           !tripAction?.value ||
@@ -275,7 +362,7 @@ export class QrScannerComponent implements OnInit {
           this.isFormIncomplete = false;
         }
       }
-      if (tripAction?.value === "scan-out") {
+      if (tripAction?.value === 'scan-out') {
         if (
           !tripPlaceOfScan?.value ||
           !tripAction?.value ||

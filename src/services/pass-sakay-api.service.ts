@@ -151,9 +151,9 @@ export class PassSakayCollectionService {
       .pipe(map((data: Object) => data));
   }
 
-  public saveScannedPassengerData(body: any): Promise<any> {
+  public postTimeIn(body: any): Promise<any> {
     return new Promise<any>((resolve: any, reject: any) => {
-      this.apiSaveScannedPassengerData(body).subscribe((data: Object) => {
+      this.apipostTimeIn(body).subscribe((data: Object) => {
         resolve(data);
       }),
       (err: any): void => {
@@ -161,11 +161,29 @@ export class PassSakayCollectionService {
       };
     });
   }
-  private apiSaveScannedPassengerData(body: any): Observable<any> {
+  private apipostTimeIn(body: any): Observable<any> {
     const headers: HttpHeaders = new HttpHeaders(this.httpHeaders);
-    const endpoint = environment.api_base_url + 'scanned-qr/';
+    const endpoint = environment.api_base_url + 'trip/boarding/time-in';
     return this.httpClientNoInterceptor
       .post(endpoint, body, { headers: headers })
+      .pipe(map((data: Object) => data));
+  }
+
+  public postTimeOut(body: any): Promise<any> {
+    return new Promise<any>((resolve: any, reject: any) => {
+      this.apipostTimeOut(body).subscribe((data: Object) => {
+        resolve(data);
+      }),
+      (err: any): void => {
+        reject(err);
+      };
+    });
+  }
+  private apipostTimeOut(body: any): Observable<any> {
+    const headers: HttpHeaders = new HttpHeaders(this.httpHeaders);
+    const endpoint = environment.api_base_url + 'trip/boarding/time-out';
+    return this.httpClientNoInterceptor
+      .put(endpoint, body, { headers: headers })
       .pipe(map((data: Object) => data));
   }
 

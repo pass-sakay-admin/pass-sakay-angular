@@ -70,6 +70,8 @@ export class TripHistoryComponent implements OnInit {
             _id: tripHistory._id,
             Date: moment(tripHistory.date).format('MMM DD YYYY'),
             Time: moment(tripHistory.time).format('HH:mm:ss A'),
+            TimeIn: tripHistory.timeIn ? moment(tripHistory.timeIn).format('HH:mm:ss A') : "--:--:-- --",
+            TimeOut: tripHistory.timeOut ? moment(tripHistory.timeOut).format('HH:mm:ss A') : "--:--:-- --",
             rowId: index + 1,
             PassengerName: fullname,
             BusName: busDetails,
@@ -82,8 +84,12 @@ export class TripHistoryComponent implements OnInit {
               (${tripHistory.tripSched.startTime} - ${tripHistory.tripSched.endTime})
             `,
             PlaceOfPickUp: `
-              ${tripHistory.landmark} - 
-              ${tripHistory.tripPlaceOfScan}
+            ${tripHistory.landmark ? tripHistory.landmark : 'N/A'} - 
+            ${tripHistory.tripPlaceOfScan ? tripHistory.tripPlaceOfScan : 'N/A'}
+            `,
+            PlaceOfDropoff: `
+              ${tripHistory.landmarkOut ? tripHistory.landmarkOut : 'N/A'} - 
+              ${tripHistory.tripPlaceOfScanOut ? tripHistory.tripPlaceOfScanOut : 'N/A'}
             `,
           });
         });

@@ -293,6 +293,8 @@ export class ContactTracingComponent implements OnInit {
               rowId: index + 1,
               Date: moment(tripHistory.date).format('MMM DD YYYY'),
               Time: moment(tripHistory.time).format('HH:mm:ss A'),
+              TimeIn: tripHistory.timeIn ? moment(tripHistory.timeIn).format('HH:mm:ss A') : "--:--:-- --",
+              TimeOut: tripHistory.timeOut ? moment(tripHistory.timeOut).format('HH:mm:ss A') : "--:--:-- --",
               BusName: busDetails,
               ScanType: tripHistory.tripType,
               Temperature: tripHistory.temperature || "N/A",
@@ -303,8 +305,12 @@ export class ContactTracingComponent implements OnInit {
                 (${tripHistory.tripSched.startTime} - ${tripHistory.tripSched.endTime})
               `,
               PlaceOfPickUp: `
-                ${tripHistory.landmark} - 
-                ${tripHistory.tripPlaceOfScan}
+                ${tripHistory.landmark ? tripHistory.landmark : 'N/A'} - 
+                ${tripHistory.tripPlaceOfScan ? tripHistory.tripPlaceOfScan : 'N/A'}
+              `,
+              PlaceOfDropoff: `
+                ${tripHistory.landmarkOut ? tripHistory.landmarkOut : 'N/A'} - 
+                ${tripHistory.tripPlaceOfScanOut ? tripHistory.tripPlaceOfScanOut : 'N/A'}
               `,
             });
             this.closeContactBody.push({
@@ -359,7 +365,7 @@ export class ContactTracingComponent implements OnInit {
                     SeatNumber: closeContact.seatNumber,
                     Address: closeContact.passengerAccount.currentAddress,
                     PhoneNumber: closeContact.passengerAccount.phoneNumber,
-                    BoardingType: boardingType
+                    // BoardingType: boardingType
                   });
               });
             }

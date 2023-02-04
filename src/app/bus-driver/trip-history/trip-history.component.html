@@ -11,7 +11,7 @@
   </div>
   <div class="row pt-5" id="content" #content>
     <!-- table -->
-    <div class="col col-12">
+    <div class="col col-12 d-none">
       <!-- handleFilterTripHistory("All") -->
       <div class="flex flex-row gap-2 p-2">
         <button mat-stroked-button color="primary" (click)="handleFilterTripHistory('All')">
@@ -27,22 +27,23 @@
     </div>
     <div class="col col-12">
       <div class="table-responsive table-responsive-sm">
-        <table class="table table-hover">
+        <table class="table table-hover table-bordered">
           <!-- <caption>
             Showing 10 of {{ 45 }} trip records, export to view them all.
           </caption> -->
           <thead>
             <tr>
-              <th scope="col">#</th>
-              <th scope="col">Passenger Name</th>
-              <th scope="col">Scan Type</th>
-              <th scope="col">Trip Sched</th>
-              <th scope="col">Pickup / Dropoff Place</th>
-              <th scope="col">Vaccine Code</th>
-              <th scope="col">Seat Number</th>
-              <th scope="col">Temperature</th>
-              <th scope="col">Date</th>
-              <th scope="col">Time</th>
+              <th scope="col" class="text-nowrap">#</th>
+              <th scope="col" class="text-nowrap">Passenger Name</th>
+              <th scope="col" class="text-nowrap">Date</th>
+              <th scope="col" class="text-nowrap">Time In</th>
+              <th scope="col" class="text-nowrap">Time Out</th>
+              <th scope="col" class="text-nowrap">Trip Sched</th>
+              <th scope="col" class="text-nowrap">Pickup</th>
+              <th scope="col" class="text-nowrap">Dropoff</th>
+              <th scope="col" class="text-nowrap">Vaccine Code</th>
+              <th scope="col" class="text-nowrap">Seat Number</th>
+              <th scope="col" class="text-nowrap">Temperature</th>
             </tr>
           </thead>
           <tbody *ngIf="!filterMode">
@@ -53,20 +54,16 @@
             </tr>
               <tr *ngFor="let tripHistory of tripHistoryList">
                 <th scope="row">{{ tripHistory.rowId }}</th>
-                <td>{{ tripHistory.PassengerName }}</td>
-                <td>
-                  <span *ngIf="tripHistory.ScanType === 'scan-in'">Scan In</span>
-                  <span *ngIf="tripHistory.ScanType === 'scan-out'"
-                    >Scan Out</span
-                  >
-                </td>
-                <td>{{ tripHistory.TripSched }}</td>
-                <td>{{ tripHistory.PlaceOfPickUp }}</td>
+                <td class="text-nowrap">{{ tripHistory.PassengerName }}</td>
+                <td class="text-nowrap">{{ tripHistory.Date }}</td>
+                <td class="text-nowrap">{{ tripHistory.TimeIn }}</td>
+                <td class="text-nowrap">{{ tripHistory.TimeOut }}</td>
+                <td class="text-nowrap">{{ tripHistory.TripSched }}</td>
+                <td class="text-nowrap">{{ tripHistory.PlaceOfPickUp }}</td>
+                <td class="text-nowrap">{{ tripHistory.PlaceOfDropoff }}</td>
                 <td>{{ tripHistory.VaccineCode }}</td>
                 <td>{{ tripHistory.SeatNumber }}</td>
                 <td>{{ tripHistory.Temperature }}</td>
-                <td>{{ tripHistory.Date }}</td>
-                <td>{{ tripHistory.Time }}</td>
               </tr>
           </tbody>
           <tbody *ngIf="filterMode">
@@ -77,20 +74,16 @@
             </tr>
               <tr *ngFor="let tripHistory of filteredTripHistoryList">
                 <th scope="row">{{ tripHistory.rowId }}</th>
-                <td>{{ tripHistory.PassengerName }}</td>
-                <td>
-                  <span *ngIf="tripHistory.ScanType === 'scan-in'">Scan In</span>
-                  <span *ngIf="tripHistory.ScanType === 'scan-out'"
-                    >Scan Out</span
-                  >
-                </td>
-                <td>{{ tripHistory.TripSched }}</td>
-                <td>{{ tripHistory.PlaceOfPickUp }}</td>
+                <td class="text-nowrap">{{ tripHistory.PassengerName }}</td>
+                <td class="text-nowrap">{{ tripHistory.Date }}</td>
+                <td class="text-nowrap">{{ tripHistory.TimeIn }}</td>
+                <td class="text-nowrap">{{ tripHistory.TimeOut }}</td>
+                <td class="text-nowrap">{{ tripHistory.TripSched }}</td>
+                <td class="text-nowrap">{{ tripHistory.PlaceOfPickUp }}</td>
+                <td class="text-nowrap">{{ tripHistory.PlaceOfDropoff }}</td>
                 <td>{{ tripHistory.VaccineCode }}</td>
                 <td>{{ tripHistory.SeatNumber }}</td>
                 <td>{{ tripHistory.Temperature }}</td>
-                <td>{{ tripHistory.Date }}</td>
-                <td>{{ tripHistory.Time }}</td>
               </tr>
           </tbody>
         </table>

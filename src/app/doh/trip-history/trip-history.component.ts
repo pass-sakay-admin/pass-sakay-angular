@@ -6,7 +6,6 @@ import jsPDF from 'jspdf';
 import * as moment from 'moment';
 import { LocalStorageService } from 'src/services/local-storage.service';
 import { PassSakayCollectionService } from 'src/services/pass-sakay-api.service';
-import { DOHComponent } from '../doh.component';
 
 @Component({
   selector: 'app-bus-driver-trip-history',
@@ -27,7 +26,6 @@ export class TripHistoryComponent implements OnInit {
     private route: Router,
     private snackBarService: MatSnackBar,
     private passSakayAPIService: PassSakayCollectionService,
-    private adminData: DOHComponent
   ) {}
 
   ngOnInit() {
@@ -62,13 +60,19 @@ export class TripHistoryComponent implements OnInit {
             ${passenger.firstname} 
             ${passenger.middlename ? passenger.middlename : ""}
           `;
+          const busDetails = `
+              ${tripHistory.busAccount.busName} -
+              ${tripHistory.busAccount.busNumber}
+            `;
           this.tripHistoryList.push({
             _id: tripHistory._id,
             Date: moment(tripHistory.date).format('MMM DD YYYY'),
             Time: moment(tripHistory.time).format('HH:mm:ss A'),
+            TimeIn: tripHistory.timeIn ? moment(tripHistory.timeIn).format('HH:mm:ss A') : "--:--:-- --",
+            TimeOut: tripHistory.timeOut ? moment(tripHistory.timeOut).format('HH:mm:ss A') : "--:--:-- --",
             rowId: index + 1,
             PassengerName: fullname,
-            BusName: `${tripHistory.busAccount.busName}`,
+            BusName: busDetails,
             ScanType: tripHistory.tripType,
             Temperature: tripHistory.temperature || "N/A",
             SeatNumber: tripHistory.seatNumber || "N/A",
@@ -78,8 +82,12 @@ export class TripHistoryComponent implements OnInit {
               (${tripHistory.tripSched.startTime} - ${tripHistory.tripSched.endTime})
             `,
             PlaceOfPickUp: `
-              ${tripHistory.landmark} - 
-              ${tripHistory.tripPlaceOfScan}
+              ${tripHistory.landmark ? tripHistory.landmark : 'N/A'} - 
+              ${tripHistory.tripPlaceOfScan ? tripHistory.tripPlaceOfScan : 'N/A'}
+            `,
+            PlaceOfDropoff: `
+              ${tripHistory.landmarkOut ? tripHistory.landmarkOut : 'N/A'} - 
+              ${tripHistory.tripPlaceOfScanOut ? tripHistory.tripPlaceOfScanOut : 'N/A'}
             `,
           });
         });

@@ -111,7 +111,7 @@
           </div>
         </div>
         <div class="col col-12 mb-3 qr-seatNumber">
-          <button mat-flat-button color="primary" (click)="openScrollableContent(longContent)">
+          <button [ngClass]="{'d-none' : isHiddenInput}" mat-flat-button color="primary" (click)="openScrollableContent(longContent)">
             {{ selectedSeatNumber ? "Chosen Seat - " + selectedSeatNumber : "Choose a Seat" }}
           </button>
           <ng-template #longContent let-modal>
