@@ -128,36 +128,41 @@
                 <thead>
                   <tr>
                     <th scope="col">#</th>
-                    <th scope="col">Bus Name</th>
-                    <th scope="col">Scan Type</th>
-                    <th scope="col">Trip Sched</th>
-                    <th scope="col">Pickup / Dropoff Place</th>
-                    <th scope="col">Vaccine Code</th>
-                    <th scope="col">Seat Number</th>
-                    <th scope="col">Temperature</th>
-                    <th scope="col">Date</th>
-                    <th scope="col">Time</th>
+                    <th scope="col">Bus</th>
+                    <th scope="col" class="text-nowrap">Date</th>
+                    <th scope="col" class="text-nowrap">Time In</th>
+                    <th scope="col" class="text-nowrap">Time Out</th>
+                    <th scope="col" class="text-nowrap">Trip Sched</th>
+                    <th scope="col" class="text-nowrap">Pickup</th>
+                    <th scope="col" class="text-nowrap">Dropoff</th>
+                    <th scope="col" class="text-nowrap">Vaccine Code</th>
+                    <th scope="col" class="text-nowrap">Seat Number</th>
+                    <th scope="col" class="text-nowrap">Temperature</th>
                   </tr>
                 </thead>
                 <tbody>
+                  <tr *ngIf="tripHistoryList.length === 0">
+                    <td
+                      colspan="12"
+                      class="text-center text-muted bg-light py-4"
+                    >
+                      No data retrieved.
+                    </td>
+                  </tr>
                   <tr *ngFor="let tripHistory of tripHistoryList">
                     <th scope="row">{{ tripHistory.rowId }}</th>
                     <td>{{ tripHistory.BusName }}</td>
-                    <td>
-                      <span *ngIf="tripHistory.ScanType === 'scan-in'"
-                        >Scan In</span
-                      >
-                      <span *ngIf="tripHistory.ScanType === 'scan-out'"
-                        >Scan Out</span
-                      >
+                    <td class="text-nowrap">{{ tripHistory.Date }}</td>
+                    <td class="text-nowrap">{{ tripHistory.TimeIn }}</td>
+                    <td class="text-nowrap">{{ tripHistory.TimeOut }}</td>
+                    <td class="text-nowrap">{{ tripHistory.TripSched }}</td>
+                    <td class="text-nowrap">{{ tripHistory.PlaceOfPickUp }}</td>
+                    <td class="text-nowrap">
+                      {{ tripHistory.PlaceOfDropoff }}
                     </td>
-                    <td>{{ tripHistory.TripSched }}</td>
-                    <td>{{ tripHistory.PlaceOfPickUp }}</td>
                     <td>{{ tripHistory.VaccineCode }}</td>
                     <td>{{ tripHistory.SeatNumber }}</td>
                     <td>{{ tripHistory.Temperature }}</td>
-                    <td>{{ tripHistory.Date }}</td>
-                    <td>{{ tripHistory.Time }}</td>
                   </tr>
                 </tbody>
               </table>

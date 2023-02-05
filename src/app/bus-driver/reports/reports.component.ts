@@ -8,6 +8,7 @@ import { PassSakayCollectionService } from 'src/services/pass-sakay-api.service'
 import { BusDriverComponent } from '../bus-driver.component';
 import jsPDF from 'jspdf';
 import autoTable from 'jspdf-autotable';
+import * as XLSX from 'xlsx';
 import {
   NgbDate,
   NgbDateStruct,
@@ -44,10 +45,11 @@ export class ReportsComponent implements OnInit {
   public minDate: any;
   public maxDate: any;
 
-  public busProfileData: Array<any> = [];
+  public busProfileData: any;
 
   public pdfBody: Array<any> = [];
   public pdfHeaders: Array<any> = [];
+  public defaultBusAccount: string = ""
 
   constructor(
     private localStorageService: LocalStorageService,
@@ -64,9 +66,8 @@ export class ReportsComponent implements OnInit {
 
   initGenerateReportForm = () => {
     this.generateReportForm = new FormGroup({
-      busAccount: new FormControl("", Validators.required),
-      passengerAccount: new FormControl('', Validators.required),
-      scanType: new FormControl('', Validators.required),
+      // busAccount: new FormControl("", Validators.required),
+      // passengerAccount: new FormControl('', Validators.required),
       dateFrom: new FormControl('', Validators.required),
       dateTo: new FormControl('', Validators.required),
       today: new FormControl('', Validators.required),
@@ -81,14 +82,17 @@ export class ReportsComponent implements OnInit {
           console.log(response);
         }
         if (!response.error) {
-          this.busProfileData.push({
-            text: response.busName,
-            value: response._id
-          });
+          this.busProfileData = {
+            Name: response.busName,
+            PlateNumber: response.busNumber,
+            ID: response._id
+          };
+          // this.generateReportForm.get('busAccount')?.setValue(response.busName)
+          this.defaultBusAccount = response._id
         }
       })
       .catch((err: any) => {
-        console.log('add passenger error', err);
+        console.log('get default busAccount failed', err);
       });
   }
 
@@ -172,35 +176,9 @@ export class ReportsComponent implements OnInit {
     console.log('setMin', this.setDateObject(dateFrom?.value));
   };
 
-  // export to PDF
-
-  //excel button click functionality
-  // exportExcel() {
-  //   import("xlsx").then(xlsx => {
-  //       const worksheet = xlsx.utils.json_to_sheet(this.sales); // Sale Data
-  //       const workbook = { Sheets: { 'data': worksheet }, SheetNames: ['data'] };
-  //       const excelBuffer: any = xlsx.write(workbook, { bookType: 'xlsx', type: 'array' });
-  //       this.saveAsExcelFile(excelBuffer, "sales");
-  //   });
-  // }
-  // saveAsExcelFile(buffer: any, fileName: string): void {
-  //   import("file-saver").then(FileSaver => {
-  //     let EXCEL_TYPE =
-  //       "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;charset=UTF-8";
-  //     let EXCEL_EXTENSION = ".xlsx";
-  //     const data: Blob = new Blob([buffer], {
-  //       type: EXCEL_TYPE
-  //     });
-  //     FileSaver.saveAs(
-  //       data,
-  //       fileName + "_export_" + new Date().getTime() + EXCEL_EXTENSION
-  //     );
-  //   });
-  // }
-
   getFormValues = (): IReportBody => {
-    const busAccount = this.generateReportForm.get('busAccount');
-    const passengerAccount = this.generateReportForm.get('passengerAccount');
+    // const busAccount = this.generateReportForm.get('busAccount');
+    // const passengerAccount = this.generateReportForm.get('passengerAccount');
     const dateFrom = this.generateReportForm.get('dateFrom');
     const dateTo = this.generateReportForm.get('dateTo');
     const today = this.generateReportForm.get('today');
@@ -264,10 +242,41 @@ export class ReportsComponent implements OnInit {
     doc.save('');
   };
 
+  generateXLSXReport = () => {
+    this.apiGenerateReportData();
+    const testData = [{
+      TestName: "John Doe",
+      TestAge: 37
+    }, {
+      TestName: "Jane Doe",
+      TestAge: 34
+    }]
+    const data = testData.map(c => ({ 'Name': c.TestName, 'Age': c.TestAge }));
+    const ws = XLSX.utils.json_to_sheet(data);
+    const wb: XLSX.WorkBook = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(wb, ws, 'Sheet1');
+    XLSX.writeFile(wb, "xlsxTest.csv");
+  }
+
   apiGenerateReportData = () => {
-    const body = this.getFormValues();
+    const dateFrom = this.generateReportForm.get('dateFrom');
+    const dateTo = this.generateReportForm.get('dateTo');
+    const today = this.generateReportForm.get('today');
+    const body: any = {};
+    if (today) {
+      body.today = new Date();
+    }
+    if (dateFrom) {
+      body.dateFrom = dateFrom?.value;
+    }
+    if (dateTo) {
+      body.dateTo = dateTo?.value;
+    }
+    body.busAccount = this.defaultBusAccount;
+
     this.passSakayAPIService.getAllTripHistoryReport(body)
       .then(data => {
+        const xlsxData: Array<any> = [];
         data.forEach((tripHistory: any, idx: number) => {
           const passenger = tripHistory.passengerAccount;
           const fullname = `
@@ -286,16 +295,41 @@ export class ReportsComponent implements OnInit {
             ${tripSchedTime}
           )`;
 
-          this.pdfBody.push({
-            id: idx + 1,
-            passengerName: fullname,
-            busName: `${tripHistory.busAccount.busName}`,
-            tripSched: tripSchedData,
-            date: moment(tripHistory.date).format('MMM DD YYYY'),
-            time: moment(tripHistory.time).format('HH:mm:ss A'),
-          });
+          const xlsxRow: any = {
+            ID: idx + 1,
+            Lastname: passenger.lastname || "",
+            Firstname: passenger.firstname || "",
+            Middlename: passenger.middlename || "",
+            Date: tripHistory.date ? moment(tripHistory.date).format('MMM DD YYYY') : "",
+            "Time In": tripHistory.timeIn ? moment(tripHistory.timeIn).format('HH:mm:ss A') : "",
+            "Time Out": tripHistory.timeOut ? moment(tripHistory.timeOut).format('HH:mm:ss A') : "",
+            "Place Of PickUp": `
+              ${tripHistory.landmark ? tripHistory.landmark : ''} - 
+              ${tripHistory.tripPlaceOfScan ? tripHistory.tripPlaceOfScan : ''}
+            `,
+            "Place Of Dropoff": `
+              ${tripHistory.landmarkOut ? tripHistory.landmarkOut : ''} - 
+              ${tripHistory.tripPlaceOfScanOut ? tripHistory.tripPlaceOfScanOut : ''}
+            `,
+            "Bus Name": tripHistory.busAccount.busName || "",
+            "Bus Plate Number": tripHistory.busAccount.busNumber || "",
+            "Trip Schedule": `
+              ${tripHistory.tripSched.name} 
+              (${tripHistory.tripSched.startTime} - ${tripHistory.tripSched.endTime})
+            `,
+            "Scan Type": tripHistory.tripType,
+            Temperature: tripHistory.temperature || "N/A",
+            "Seat Number": tripHistory.seatNumber || "N/A",
+            "Vaccine Code": tripHistory.vaccineCode || "N/A",
+          }
+          xlsxData.push(xlsxRow);
         });
-        this.generatePDFReport(this.pdfBody, "trip-report-" + moment().format("MMMDDYYYY"));
+
+        const ws = XLSX.utils.json_to_sheet(xlsxData);
+        const wb: XLSX.WorkBook = XLSX.utils.book_new();
+        const fileName = `trip-report-${Date.now()}.csv`;
+        XLSX.utils.book_append_sheet(wb, ws, 'Trip Report ' + moment().format('MMM DD YYYY'));
+        XLSX.writeFile(wb, fileName);
       })
       .catch(error => {
         console.error(error);

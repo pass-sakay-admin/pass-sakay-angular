@@ -38,6 +38,8 @@ export class ContactTracingComponent implements OnInit {
   public isFormIncomplete: boolean = true;
 
   public tripHistoryList: Array<any> = [];
+  public closeContacts: Array<any> = [];
+  public closeContactBody: Array<any> = [];
   public contactTracingForm!: FormGroup;
 
   public toggleDatePicker: Boolean = true;
@@ -264,6 +266,8 @@ export class ContactTracingComponent implements OnInit {
   }
 
   checkTripHistory = () => {
+    this.tripHistoryList = [];
+    this.closeContactBody = [];
     const passengerAccount = this.contactTracingForm.get('passengerAccount');
     const dateTaggedAsPositive = this.contactTracingForm.get('dateTaggedAsPositive');
     const status = this.contactTracingForm.get('status');
@@ -289,6 +293,8 @@ export class ContactTracingComponent implements OnInit {
               rowId: index + 1,
               Date: moment(tripHistory.date).format('MMM DD YYYY'),
               Time: moment(tripHistory.time).format('HH:mm:ss A'),
+              TimeIn: tripHistory.timeIn ? moment(tripHistory.timeIn).format('HH:mm:ss A') : "--:--:-- --",
+              TimeOut: tripHistory.timeOut ? moment(tripHistory.timeOut).format('HH:mm:ss A') : "--:--:-- --",
               BusName: busDetails,
               ScanType: tripHistory.tripType,
               Temperature: tripHistory.temperature || "N/A",
@@ -299,10 +305,20 @@ export class ContactTracingComponent implements OnInit {
                 (${tripHistory.tripSched.startTime} - ${tripHistory.tripSched.endTime})
               `,
               PlaceOfPickUp: `
-                ${tripHistory.landmark} - 
-                ${tripHistory.tripPlaceOfScan}
+                ${tripHistory.landmark ? tripHistory.landmark : 'N/A'} - 
+                ${tripHistory.tripPlaceOfScan ? tripHistory.tripPlaceOfScan : 'N/A'}
+              `,
+              PlaceOfDropoff: `
+                ${tripHistory.landmarkOut ? tripHistory.landmarkOut : 'N/A'} - 
+                ${tripHistory.tripPlaceOfScanOut ? tripHistory.tripPlaceOfScanOut : 'N/A'}
               `,
             });
+            this.closeContactBody.push({
+              date: tripHistory.date,
+              busAccount: tripHistory.busAccount,
+              tripSched: tripHistory.tripSched,
+              passengerAccount: body.passengerAccount,
+            })
           });
         }
       })
@@ -310,6 +326,58 @@ export class ContactTracingComponent implements OnInit {
         console.error(error);
       });
     }
+  }
+
+  checkCloseContacts = () => {
+    const body = {
+      parameters: this.closeContactBody
+    };
+    this.closeContacts = [];
+    this.passSakayAPIService.getCloseContacts(body)
+      .then((data: any) => {
+        if (data.length > 0) {
+          data.forEach((closeContactItem: any) => {
+            const dateTraced = moment(closeContactItem.date).format('MMM DD YYYY');
+            const busDetails = closeContactItem.busAccount.busName + " | " + 
+              closeContactItem.busAccount.busNumber;
+            const tripSchedDetails = closeContactItem.tripSched.name + " | " +
+              closeContactItem.tripSched.startTime + " - " + 
+              closeContactItem.tripSched.endTime + " | " +
+              closeContactItem.tripSched.startingPoint + " - " + 
+              closeContactItem.tripSched.finishingPoint;
+
+            const returnValue: any = {
+              Date: dateTraced,
+              Bus: busDetails,
+              TripSched: tripSchedDetails,
+              CloseContacts: []
+            }
+
+            if (closeContactItem.closeContacts.length > 0) {
+              closeContactItem.closeContacts.forEach((closeContact: any) => {
+                const passengerName = closeContact.passengerAccount.firstname + " " +
+                  closeContact.passengerAccount.lastname;
+                const boardingType = `${closeContact.tripType == 'scan-in' ? 'IN' : 'OUT'} at 
+                  ${moment(closeContact.time).format('HH:mm:ss A')}`
+                
+                  returnValue.CloseContacts.push({
+                    Passenger: passengerName,
+                    SeatNumber: closeContact.seatNumber,
+                    Address: closeContact.passengerAccount.currentAddress,
+                    PhoneNumber: closeContact.passengerAccount.phoneNumber,
+                    // BoardingType: boardingType
+                  });
+              });
+            }
+
+            this.closeContacts.push(returnValue);
+          });
+          console.log(this.closeContacts)
+        }
+      })
+      .catch((error: any) => {
+        console.error(error);
+      })
   }
 
   // save = (): void => {

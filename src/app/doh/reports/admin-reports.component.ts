@@ -83,6 +83,7 @@ export class AdminReportsComponent implements OnInit {
             text: response.busName,
             value: response._id
           });
+          this.generateReportForm.get('busAccount')?.setValue(response._id);
         }
       })
       .catch((err: any) => {
