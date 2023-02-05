@@ -279,22 +279,6 @@ export class ReportsComponent implements OnInit {
         const xlsxData: Array<any> = [];
         data.forEach((tripHistory: any, idx: number) => {
           const passenger = tripHistory.passengerAccount;
-          const fullname = `
-            ${passenger.lastname}, 
-            ${passenger.firstname} 
-            ${passenger.middlename ? passenger.middlename : ""}
-          `;
-
-          const tripSched = tripHistory.tripSched;
-          const tripSchedRoutine = tripSched.daysRoutine.map((day: any) => day[0]).join('');
-          const tripSchedRoute = `${tripSched.startingPoint} - ${tripSched.finishingPoint}`;
-          const tripSchedTime = `${tripSched.startTime} - ${tripSched.endTime}`;
-          const tripSchedData = `${tripSched.name} (
-            ${tripSchedRoutine} | 
-            ${tripSchedRoute} | 
-            ${tripSchedTime}
-          )`;
-
           const xlsxRow: any = {
             ID: idx + 1,
             Lastname: passenger.lastname || "",
