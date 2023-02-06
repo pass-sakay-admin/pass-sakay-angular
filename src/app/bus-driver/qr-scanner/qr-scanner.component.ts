@@ -35,6 +35,7 @@ export class QrScannerComponent implements OnInit {
   public hasDevices!: boolean;
   public hasPermission!: boolean;
   public scannerEnabled: boolean = false;
+  public passengerScanned: any;
 
   public tripScheduleList: Array<any> = [];
 
@@ -146,6 +147,20 @@ export class QrScannerComponent implements OnInit {
     this.qrResultString = '';
   }
 
+  initPassengerData = (id: any) => {
+    this.passSakayAPIService
+      .getOnePassengerData(id)
+      .then((response: any) => {
+        if (!response.error) {
+          this.passengerScanned = response;
+        }
+      })
+      .catch((err: any) => {
+        console.log('add passenger error', err);
+      });
+    // this.passengerData = []
+  };
+
   onCodeResult(resultString: any) {
     this.scannerEnabled = false;
     const passengerData = JSON.parse(resultString);
@@ -153,6 +168,7 @@ export class QrScannerComponent implements OnInit {
       this.openSnackBar('Invalid QR Code.', 'Got it');
       this.cd.markForCheck();
     } else {
+      this.initPassengerData(passengerData.passenger);
       const tripType = this.tripDetailsFormGroup.get('tripAction');
       const tripSched = this.tripDetailsFormGroup.get('tripSched');
       // this.tripSchedSelected = tripSched?.value;
@@ -233,7 +249,9 @@ export class QrScannerComponent implements OnInit {
           .postTimeOut(body)
           .then((response: any) => {
             if (response) {
+              const passengerFullname = this.passengerScanned.firstname + " " + this.passengerScanned.lastname
               this.snackBarService.open('Successfully Scanned QR.', 'Got it');
+              this.snackBarService.open(passengerFullname + ' has alighted the bus.', 'OK');
               console.log(response);
               this.cd.markForCheck();
               this.isFormIncomplete = true;
