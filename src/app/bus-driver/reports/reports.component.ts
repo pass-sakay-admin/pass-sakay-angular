@@ -193,24 +193,6 @@ export class ReportsComponent implements OnInit {
     return payload;
   };
 
-  // save = (): void => {
-  //   let content = this.content.nativeElement;
-  //   let doc: any = new jsPDF('p', 'mm', 'a4');
-  //   let _elementHandlers = {
-  //     '#editor': function (element: any, renderer: any) {
-  //       return true;
-  //     },
-  //   };
-  //   doc.html(content.innerHTML, {
-  //     x: 15,
-  //     y: 15,
-  //     width: 190,
-  //     elementHandlers: _elementHandlers,
-  //   });
-
-  //   doc.save('test.pdf');
-  // };
-
   generatePDFReport = (data: any, fileName: string) => {
     const doc = new jsPDF('p', 'pt', 'letter');
     let y = 10;
@@ -272,42 +254,47 @@ export class ReportsComponent implements OnInit {
     if (dateTo) {
       body.dateTo = dateTo?.value;
     }
-    body.busAccount = this.defaultBusAccount;
+    body.busAccount = this.busDriverData.userData._userId;
 
-    this.passSakayAPIService.getAllTripHistoryReport(body)
+    this.passSakayAPIService.generateTripReport(body)
       .then(data => {
         const xlsxData: Array<any> = [];
-        data.forEach((tripHistory: any, idx: number) => {
-          const passenger = tripHistory.passengerAccount;
-          const xlsxRow: any = {
-            ID: idx + 1,
-            Lastname: passenger.lastname || "",
-            Firstname: passenger.firstname || "",
-            Middlename: passenger.middlename || "",
-            Date: tripHistory.date ? moment(tripHistory.date).format('MMM DD YYYY') : "",
-            "Time In": tripHistory.timeIn ? moment(tripHistory.timeIn).format('HH:mm:ss A') : "",
-            "Time Out": tripHistory.timeOut ? moment(tripHistory.timeOut).format('HH:mm:ss A') : "",
-            "Place Of PickUp": `
-              ${tripHistory.landmark ? tripHistory.landmark : ''} - 
-              ${tripHistory.tripPlaceOfScan ? tripHistory.tripPlaceOfScan : ''}
-            `,
-            "Place Of Dropoff": `
-              ${tripHistory.landmarkOut ? tripHistory.landmarkOut : ''} - 
-              ${tripHistory.tripPlaceOfScanOut ? tripHistory.tripPlaceOfScanOut : ''}
-            `,
-            "Bus Name": tripHistory.busAccount.busName || "",
-            "Bus Plate Number": tripHistory.busAccount.busNumber || "",
-            "Trip Schedule": `
-              ${tripHistory.tripSched.name} 
-              (${tripHistory.tripSched.startTime} - ${tripHistory.tripSched.endTime})
-            `,
-            "Scan Type": tripHistory.tripType,
-            Temperature: tripHistory.temperature || "N/A",
-            "Seat Number": tripHistory.seatNumber || "N/A",
-            "Vaccine Code": tripHistory.vaccineCode || "N/A",
-          }
-          xlsxData.push(xlsxRow);
-        });
+        if (data.length > 0) {
+          data.forEach((tripHistory: any, idx: number) => {
+            const passenger = tripHistory.passengerAccount;
+            const xlsxRow: any = {
+              ID: idx + 1,
+              Lastname: passenger.lastname || "",
+              Firstname: passenger.firstname || "",
+              Middlename: passenger.middlename || "",
+              Date: tripHistory.date ? moment(tripHistory.date).format('MMM DD YYYY') : "",
+              "Time In": tripHistory.timeIn ? moment(tripHistory.timeIn).format('HH:mm:ss A') : "",
+              "Time Out": tripHistory.timeOut ? moment(tripHistory.timeOut).format('HH:mm:ss A') : "",
+              "Place Of PickUp": `
+                ${tripHistory.landmark ? tripHistory.landmark : ''} - 
+                ${tripHistory.tripPlaceOfScan ? tripHistory.tripPlaceOfScan : ''}
+              `,
+              "Place Of Dropoff": `
+                ${tripHistory.landmarkOut ? tripHistory.landmarkOut : ''} - 
+                ${tripHistory.tripPlaceOfScanOut ? tripHistory.tripPlaceOfScanOut : ''}
+              `,
+              "Bus Name": tripHistory.busAccount.busName || "",
+              "Bus Plate Number": tripHistory.busAccount.busNumber || "",
+              "Trip Schedule": `
+                ${tripHistory.tripSched.name} 
+                (${tripHistory.tripSched.startTime} - ${tripHistory.tripSched.endTime})
+              `,
+              Temperature: tripHistory.temperature || "N/A",
+              "Seat Number": tripHistory.seatNumber || "N/A",
+              "Vaccine Code": tripHistory.vaccineCode || "N/A",
+            }
+            xlsxData.push(xlsxRow);
+          });
+        } else {
+          xlsxData.push({
+            "NO DATA RETRIEVED": "No records found with the given report parameters."
+          })
+        }
 
         const ws = XLSX.utils.json_to_sheet(xlsxData);
         const wb: XLSX.WorkBook = XLSX.utils.book_new();
@@ -318,12 +305,6 @@ export class ReportsComponent implements OnInit {
       .catch(error => {
         console.error(error);
       });
-  };
-
-  generateHeaderFooterTable = () => {
-    const fileTitle = ``;
-    console.log(this.generateReportForm);
-    // this.generatePDFReport();
   };
 
   ngDoCheck(): void {}

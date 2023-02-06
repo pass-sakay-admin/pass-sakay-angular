@@ -16,26 +16,29 @@
     >
       <div class="row pb-3">
         <div class="col col-12">
-          <!-- <div class="form-group">
-            <label>Bus Name</label>
-            <select name="busAccount" class="form-control form-select disabled" [disabled]="true" formControlName="busAccount">
-              <option selected *ngFor="let bus of busProfileData" [value]="bus.value">
-                {{ bus.text }}
-              </option>
-            </select> 
-            <small id="lastnameHelp" class="form-text text-muted">
-                We'll never share your email with anyone else.
-            </small>
-          </div> -->
           <mat-form-field appearance="outline" class="d-block">
             <mat-label>Bus Name</mat-label>
-            <mat-select formControlName="tripPlaceOfScan" placeholder="Select a Bus">
+            <mat-select formControlName="busAccount" placeholder="Select a Bus">
               <mat-option
                 aria-selected="true"
                 selected
                 *ngFor="let bus of busProfileData" 
                 [value]="bus.value"
                 >{{ bus.text }}</mat-option
+              >
+            </mat-select>
+          </mat-form-field>
+        </div>
+        <div class="col col-12">
+          <mat-form-field appearance="outline" class="d-block">
+            <mat-label>Passenger</mat-label>
+            <mat-select formControlName="passengerAccount" placeholder="Select a Bus">
+              <mat-option
+                aria-selected="true"
+                selected
+                *ngFor="let passenger of passengerList" 
+                [value]="passenger.value"
+                >{{ passenger.text }}</mat-option
               >
             </mat-select>
           </mat-form-field>
@@ -51,46 +54,6 @@
             <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
           </mat-form-field>
         </div>
-        <!-- <div class="col col-12 col-sm-12 col-md-12 col-lg-6 col-xl-6 pb-3">
-          <div class="form-group">
-            <label>From</label>
-            <div class="date-picker">
-              <span (click)="datepickerFrom.toggle()" *ngIf="toggleDatePicker"></span>
-              <input
-                class="form-control"
-                type="text"
-                placeholder="-- Choose a date --"
-                name="dateFrom"
-                formControlName="dateFrom"
-                ngbDatepicker
-                #datepickerFrom="ngbDatepicker"
-                autocomplete="false"
-                (change)="setMinDate()"
-                [maxDate]="maxDate"
-              />
-            </div>
-          </div>
-        </div>
-        <div class="col col-12 col-sm-12 col-md-12 col-lg-6 col-xl-6 pb-3">
-          <div class="form-group">
-            <label>To</label>
-            <div class="date-picker">
-              <span (click)="datepickerTo.toggle()" *ngIf="toggleDatePicker"></span>
-              <input
-                class="form-control"
-                type="text"
-                placeholder="-- Choose a date --"
-                name="dateTo"
-                formControlName="dateTo"
-                ngbDatepicker
-                #datepickerTo="ngbDatepicker"
-                autocomplete="false"
-                (change)="setMaxDate()"
-                [minDate]="minDate"
-              />
-            </div>
-          </div>
-        </div> -->
         <div class="col col-12 col-sm-12 col-md-12 col-lg-12 col-xl-12 pb-3">
           <div class="form-group">
             <div class="form-check form-switch">
@@ -112,7 +75,7 @@
               class="order-2"
               mat-flat-button
               color="primary"
-              (click)="generateHeaderFooterTable()"
+              (click)="apiGenerateReportData()"
             >
               Generate
             </button>
