@@ -7,6 +7,8 @@ import { ZXingScannerComponent } from '@zxing/ngx-scanner';
 import { BusDriverComponent } from '../bus-driver.component';
 import { PassSakayCollectionService } from 'src/services/pass-sakay-api.service';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { LocalStorageService } from 'src/services/local-storage.service';
+import { environment } from 'src/environments/environment';
 
 @Component({
   selector: 'app-qr-scanner',
@@ -24,6 +26,7 @@ export class QrScannerComponent implements OnInit {
   public availableDevices!: MediaDeviceInfo[];
   public deviceCurrent!: MediaDeviceInfo | undefined;
   public deviceSelected!: string;
+  public tripSchedSelected: string = "";
 
   public scanPayload: Array<any> = [];
   public isFormIncomplete: boolean = true;
@@ -100,7 +103,8 @@ export class QrScannerComponent implements OnInit {
     public snackBarService: MatSnackBar,
     private passSakayAPIService: PassSakayCollectionService,
     private busAccount: BusDriverComponent,
-    private modalService: NgbModal
+    private modalService: NgbModal,
+    private localStorageService: LocalStorageService,
   ) {}
 
   ngOnInit(): void {
@@ -151,6 +155,7 @@ export class QrScannerComponent implements OnInit {
     } else {
       const tripType = this.tripDetailsFormGroup.get('tripAction');
       const tripSched = this.tripDetailsFormGroup.get('tripSched');
+      // this.tripSchedSelected = tripSched?.value;
       const temperature = this.tripDetailsFormGroup.get('temperature');
       const vaccineCode = this.tripDetailsFormGroup.get('vaccineCode');
       const seatNumber = this.tripDetailsFormGroup.get('seatNumber');
@@ -159,7 +164,7 @@ export class QrScannerComponent implements OnInit {
       const busAccount = this.busAccount.userData._userId;
 
       if (tripType?.value === 'scan-in') {
-        let body: Object = {
+        let body: any = {
           passengerAccount: passengerData.passenger || null,
           tripType: tripType?.value || null,
           busAccount: busAccount || null,
@@ -172,6 +177,8 @@ export class QrScannerComponent implements OnInit {
           date: Date.now(),
           timeIn: Date.now(),
         };
+        // this.tripSchedSelected = body.tripSched;
+        this.localStorageService.set(environment.LOCAL_STORAGE_TRIP_SCHED_KEY, body.tripSched);
 
         console.log(body);
         this.passSakayAPIService
@@ -191,6 +198,7 @@ export class QrScannerComponent implements OnInit {
               });
               this.tripDetailsFormGroup.markAsPristine();
               this.tripDetailsFormGroup.markAsUntouched();
+              this.isHiddenInput = false;
             }
           })
           .catch((err: any) => {
@@ -206,12 +214,14 @@ export class QrScannerComponent implements OnInit {
               });
               this.tripDetailsFormGroup.markAsPristine();
               this.tripDetailsFormGroup.markAsUntouched();
+              this.isHiddenInput = false;
           });
       } else {
+        const tripSched = this.localStorageService.get(environment.LOCAL_STORAGE_TRIP_SCHED_KEY)
         let body: Object = {
           passengerAccount: passengerData.passenger || null,
           busAccount: busAccount || null,
-          tripSched: tripSched?.value || null,
+          tripSched: tripSched || null,
           landmarkOut: landmark?.value || null,
           tripPlaceOfScanOut: tripPlaceOfScan?.value || null,
           date: Date.now(),
@@ -236,6 +246,7 @@ export class QrScannerComponent implements OnInit {
               });
               this.tripDetailsFormGroup.markAsPristine();
               this.tripDetailsFormGroup.markAsUntouched();
+              this.isHiddenInput = false;
             }
           })
           .catch((err: any) => {
@@ -251,6 +262,7 @@ export class QrScannerComponent implements OnInit {
               });
               this.tripDetailsFormGroup.markAsPristine();
               this.tripDetailsFormGroup.markAsUntouched();
+              this.isHiddenInput = false;
           });
       }
     }
@@ -341,11 +353,12 @@ export class QrScannerComponent implements OnInit {
     const vaccineCode = this.tripDetailsFormGroup.get('vaccineCode');
     if (tripAction?.value === 'scan-in') {
       this.isHiddenInput = false;
-    } else {
+    } 
+    if (tripAction?.value === 'scan-out') {
       this.isHiddenInput = true;
     }
 
-    if (!tripPlaceOfScan?.value || !tripAction?.value || !tripSched?.value) {
+    if (!tripPlaceOfScan?.value || !tripAction?.value) {
       this.isFormIncomplete = true;
     } else {
       if (tripAction?.value === 'scan-in') {
@@ -365,8 +378,7 @@ export class QrScannerComponent implements OnInit {
       if (tripAction?.value === 'scan-out') {
         if (
           !tripPlaceOfScan?.value ||
-          !tripAction?.value ||
-          !tripSched?.value
+          !tripAction?.value
         ) {
           this.isFormIncomplete = true;
         } else {

@@ -7,6 +7,7 @@ export const environment = {
   api_base_url: 'http://localhost:4300/pass-sakay-v1/api/',
   STORAGE_KEY: 'eYrt24weHy4S4Jb34asdY63NE23s-d',
   LOCAL_STORAGE_AUTH_KEY: 'eYrt24weHy4S4Jb34asdY63NE23s-d',
+  LOCAL_STORAGE_TRIP_SCHED_KEY: "selected_trip_sched",
   USER_ROLE: {
     Passenger: "passenger",
     BusDriver: "bus-driver",

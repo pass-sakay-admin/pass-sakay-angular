@@ -75,7 +75,7 @@
                 formControlName="vaccineCode">
             </mat-form-field>
           </div>
-          <div class="form-group">
+          <div class="form-group" [ngClass]="{'d-none' : isHiddenInput}">
             <mat-form-field appearance="outline" class="d-block">
               <mat-label>Select Trip Schedule</mat-label>
               <mat-select formControlName="tripSched">
@@ -89,7 +89,7 @@
           </div>
           <div class="form-group">
             <mat-form-field appearance="outline" class="d-block">
-              <mat-label>Pickup / Dropoff Landmark (optional)</mat-label>
+              <mat-label>{{ isHiddenInput ? "Dropoff Landmark" : "Pickup Landmark" }}</mat-label>
               <input
                 type="text"
                 matInput
@@ -99,7 +99,9 @@
           </div>
           <div class="form-group">
             <mat-form-field appearance="outline" class="d-block">
-              <mat-label>Pickup / Dropoff City</mat-label>
+              <mat-label>
+                {{ isHiddenInput ? "Dropoff City" : "Pickup City" }}
+              </mat-label>
               <mat-select formControlName="tripPlaceOfScan">
                 <mat-option
                   *ngFor="let city of parsedCityList"
